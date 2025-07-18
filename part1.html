@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ôn tập Part 1</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 0;
+      margin: 0;
+    }
+    .header-bar {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 40px 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      border-radius: 12px 12px 0 0;
+      border-bottom: 6px solid #5e6eea;
+    }
+    .header-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(10px);
+    }
+    .header-bar::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.3; }
+      50% { transform: scale(1.1); opacity: 0.6; }
+    }
+    .header-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+    .main-nav {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-weight: 600;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    .nav-link:hover::before {
+      left: 100%;
+    }
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    }
+    .main-title {
+      color: #fff !important;
+      font-size: 2.5rem !important;
+      font-weight: 800 !important;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      letter-spacing: 1px;
+      margin: 0 auto;
+      position: relative;
+      background: linear-gradient(45deg, #fff, #f0f0f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+    }
+    .main-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+      border-radius: 2px;
+    }
+    .test-box {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 25px auto;
+      max-width: 800px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .test-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+    }
+    .test-box h2 {
+      color: #333;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    select {
+      padding: 8px 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      margin: 0 5px;
+      font-size: 14px;
+      background: white;
+      transition: all 0.3s ease;
+    }
+    select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    .correct {
+      border-color: #27ae60 !important;
+      background-color: #d5f4e6 !important;
+    }
+    .wrong {
+      border-color: #e74c3c !important;
+      background-color: #ffeaa7 !important;
+    }
+    button {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 15px;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      background: linear-gradient(45deg, #764ba2, #667eea);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .question-text {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #333;
+      margin-bottom: 12px;
+    }
+    @media (max-width: 768px) {
+      .header-bar {
+        padding: 30px 15px;
+      }
+      .header-content {
+        flex-direction: column;
+        gap: 16px;
+      }
+      .main-title {
+        font-size: 2rem !important;
+        text-align: center;
+      }
+      .aptis-link {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+      }
+      .test-box {
+        margin: 20px 15px;
+        padding: 20px;
+      }
+      .main-nav {
+        top: 10px;
+        left: 10px;
+      }
+    }
+    @media (max-width: 480px) {
+      .main-title {
+        font-size: 1.6rem !important;
+      }
+    }
+    .back-link {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-weight: 600;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .back-link:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: white;
+      color: white;
+    }
+
+    .back-link svg {
+      stroke: white;
+      flex-shrink: 0;
+    }
+    .header-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-content h1.main-title {
+      margin: 0 auto;
+    }
+
+    .back-link {
+      position: absolute;
+      left: 0;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+
+    <div class="header-content">
+      <a href="index.html" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M13 10H7M9 7l-3 3 3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Quay lại trang chủ</span>
+      </a>
+      <h1 class="main-title">Ôn tập Part 1</h1>
+    </div>
+  <div id="test-container"></div>
+  <script>
+   const tests = [
+      {
+        title: "TEST 1",
+        questions: [
+          { text: "I saw some shows in the (market/window/shoe) of one store. I didn't (eat/drink/buy) it.", answers: ["window", "buy"], choices: [["market","window","shoe"],["eat","drink","buy"]] },
+          { text: "I buy some food at the (classroom/park/market). I ate (watch/door/cake).", answers: ["market", "cake"], choices: [["classroom","park","market"],["watch","door","cake"]] },
+          { text: "I (ate/saw/watched) a program on TV.", answers: ["watched"], choices: [["ate","saw","watched"]] },
+        ],
+      },
+      {
+        title: "TEST 2",
+        questions: [
+          { text: "I (go/live/walk) in a flat.", answers: ["live"], choices: [["go","live","walk"]] },
+          { text: "I (share/drink/hold) it with my friend. We are in the same (door/class/chair). We (drive/smile/say) to work.", answers: ["share", "class", "drive"], choices: [["share","drink","hold"],["door","class","chair"],["drive","smile","say"]] },
+          { text: "We like to (hold/cook/melt) dinner.", answers: ["cook"], choices: [["hold","cook","melt"]] },
+        ],
+      },
+      {
+        title: "TEST 3",
+        questions: [
+          {
+            text: "I am living with a family (next/near/under) the city. The children are (cruel/noisy/friendly) to me.",
+            answers: ["near", "friendly"],
+            choices: [
+              ["next", "near", "under"],
+              ["cruel", "noisy", "friendly"],
+            ],
+          },
+          {
+            text: "Seamus and Agnes (read/hold/practise) speaking English with me. Sometimes, I (see/read/say) to Seamus and Agnes.",
+            answers: ["practise", "read"],
+            choices: [
+              ["read", "hold", "practise"],
+              ["see", "read", "say"],
+            ],
+          },
+          {
+            text: "I hate the food, (then/so/also) yesterday I ate out.",
+            answers: ["so"],
+            choices: [["then", "so", "also"]],
+          },
+        ]
+      },
+      {
+        title: "TEST 4",
+        questions: [
+          {
+            text: "Everyone is (friendly/melty/noisy).",
+            answers: ["friendly"],
+            choices: [["friendly", "melty", "noisy"]],
+          },
+          {
+            text: "My flat is near university, so I can (train/sleep/walk) to my class.",
+            answers: ["walk"],
+            choices: [["train", "sleep", "walk"]],
+          },
+          {
+            text: "There is a girl living with me, I met her for the (very/first/one) time.",
+            answers: ["first"],
+            choices: [["very", "first", "one"]],
+          },
+          {
+            text: "She is from France and she can (talk/say/speak) 5 languages.",
+            answers: ["speak"],
+            choices: [["talk", "say", "speak"]],
+          },
+          {
+            text: "We eat dinner (toward/together/another).",
+            answers: ["together"],
+            choices: [["toward", "together", "another"]],
+          },
+        ]
+      },
+      {
+        title: "TEST 5",
+        questions: [
+          {
+            text: "I start (sleep/early/angry) in the morning. I have (lunch/bed/tutor).",
+            answers: ["early", "lunch"],
+            choices: [
+              ["sleep", "early", "angry"],
+              ["lunch", "bed", "tutor"],
+            ],
+          },
+          {
+            text: "I (go/leave/return) the office.",
+            answers: ["leave"],
+            choices: [["go", "leave", "return"]],
+          },
+          {
+            text: "I go home in my new (bag/jeans/car).",
+            answers: ["car"],
+            choices: [["bag", "jeans", "car"]],
+          },
+          {
+            text: "I go to bed when I feel (sleepy/angry/alert).",
+            answers: ["sleepy"],
+            choices: [["sleepy", "angry", "alert"]],
+          },
+        ]
+      },
+      {
+        title: "TEST 6",
+        questions: [
+          {
+            text: "The water is (sour/clear/see).",
+            answers: ["clear"],
+            choices: [["sour", "clear", "see"]],
+          },
+          {
+            text: "The (wind/dust/sun) is out.",
+            answers: ["sun"],
+            choices: [["wind", "dust", "sun"]],
+          },
+          {
+            text: "I have an (tired/enjoyable/good) holiday.",
+            answers: ["enjoyable"],
+            choices: [["tired", "enjoyable", "good"]],
+          },
+          {
+            text: "After (working/sleeping/eating) so hard.",
+            answers: ["working"],
+            choices: [["working", "sleeping", "eating"]],
+          },
+          {
+            text: "I hope to (tell/read/forward) your letter.",
+            answers: ["read"],
+            choices: [["tell", "read", "forward"]],
+          },
+        ]
+      },
+      {
+        title: "TEST 7",
+        questions: [
+          {
+            text: "I imagine you don't want to (love/remember/miss) this.",
+            answers: ["miss"],
+            choices: [["love", "remember", "miss"]],
+          },
+          {
+            text: "I (called/told/said) you earlier but you were not home. Can you be (early/sleepy/ready) before 7pm?",
+            answers: ["called", "ready"],
+            choices: [
+              ["called", "told", "said"],
+              ["early", "sleepy", "ready"],
+            ],
+          },
+          {
+            text: "I can (hold/meet/miss) you at your place then.",
+            answers: ["meet"],
+            choices: [["hold", "meet", "miss"]],
+          },
+          {
+            text: "Don't have too much (talk/pencil/dinner) because we're going to eat cake.",
+            answers: ["dinner"],
+            choices: [["talk", "pencil", "dinner"]],
+          },
+        ]
+      },
+      {
+        title: "TEST 8",
+        questions: [
+          {
+            text: "The budget doesn't (balance/statement/think).",
+            answers: ["balance"],
+            choices: [["balance", "statement", "think"]],
+          },
+          {
+            text: "Could you get the financial (balance/statement/think) and check for any errors?",
+            answers: ["statement"],
+            choices: [["balance", "statement", "think"]],
+          },
+          {
+            text: "I (balance/statement/think) it will help clarify the issue.",
+            answers: ["think"],
+            choices: [["balance", "statement", "think"]],
+          },
+          {
+            text: "Please read the information (balance/statement/slowly) so we don't miss any details.",
+            answers: ["slowly"],
+            choices: [["balance", "statement", "slowly"]],
+          },
+          {
+            text: "Also, send me the results (before/after/since) you go home, not after.",
+            answers: ["before"],
+            choices: [["before", "after", "since"]],
+          },
+        ]
+      },
+      {
+        title: "TEST 9",
+        questions: [
+          {
+            text: "It is (yet/not/just) what I like.",
+            answers: ["just"],
+            choices: [["yet", "not", "just"]],
+          },
+          {
+            text: "And it is the perfect color, (so/too/to).",
+            answers: ["too"],
+            choices: [["so", "too", "to"]],
+          },
+          {
+            text: "I am going to wear it (to/on/at) my birthday party.",
+            answers: ["at"],
+            choices: [["to", "on", "at"]],
+          },
+          {
+            text: "I will save you (many/none/some) cake.",
+            answers: ["some"],
+            choices: [["many", "none", "some"]],
+          },
+          {
+            text: "(Give/Hold/Receive) my love to everyone.",
+            answers: ["give"],
+            choices: [["Give", "Hold", "Receive"]],
+          },
+        ]
+      },
+      {
+        title: "TEST 10",
+        questions: [
+          {
+            text: "I am never (late/soon/early).",
+            answers: ["late"],
+            choices: [["late", "soon", "early"]],
+          },
+          {
+            text: "In the mornings, I attend (meetings/dinner/breakfast).",
+            answers: ["meetings"],
+            choices: [["meetings", "dinner", "breakfast"]],
+          },
+          {
+            text: "I eat lunch in the (park/city/village).",
+            answers: ["park"],
+            choices: [["park", "city", "village"]],
+          },
+          {
+            text: "I buy food from the (shop/window/car).",
+            answers: ["shop"],
+            choices: [["shop", "window", "car"]],
+          },
+          {
+            text: "I always (cook/drink/breathe) dinner for myself.",
+            answers: ["cook"],
+            choices: [["cook", "drink", "breathe"]],
+          },
+        ]
+      },
+      {
+        title: "TEST 11",
+        questions: [
+          {
+            text: "The weather is (cheap/expensive/great).",
+            answers: ["great"],
+            choices: [["cheap", "expensive", "great"]],
+          },
+          {
+            text: "We are on the (city/countryside/boat).",
+            answers: ["boat"],
+            choices: [["city", "countryside", "boat"]],
+          },
+          {
+            text: "We eat dinner (after/then/before) we go to church.",
+            answers: ["then"],
+            choices: [["after", "then", "before"]],
+          },
+          {
+            text: "We are going to (drive/see/talk) around.",
+            answers: ["drive"],
+            choices: [["drive", "see", "talk"]],
+          },
+          {
+            text: "I hope the weather isn't (too/to/on) hot.",
+            answers: ["too"],
+            choices: [["too", "to", "on"]],
+          },
+        ]
+      },
+      {
+        title: "TEST 12",
+        questions: [
+          {
+            text: "It is a (long/red/tall) day.",
+            answers: ["long"],
+            choices: [["long", "red", "tall"]],
+          },
+          {
+            text: "I need the (work/job/details) of the report.",
+            answers: ["details"],
+            choices: [["work", "job", "details"]],
+          },
+          {
+            text: "Can you print a (information/copy/paper) for me?",
+            answers: ["copy"],
+            choices: [["information", "copy", "paper"]],
+          },
+          {
+            text: "I am (busy/table/round) with my work.",
+            answers: ["busy"],
+            choices: [["busy", "table", "round"]],
+          },
+          {
+            text: "I will have meetings with my (neighbor/wife/client).",
+            answers: ["client"],
+            choices: [["neighbor", "wife", "client"]],
+          },
+        ]
+      },
+    ];
+
+    function renderTests() {
+      const container = document.getElementById('test-container');
+      let html = "";
+
+      tests.forEach((test, testIdx) => {
+        html += `<div class="test-box"><h2>${test.title}</h2>`;
+        test.questions.forEach((q, qIdx) => {
+          const parts = q.text.split(/\([^)]*\)/g);
+          const matches = [...q.text.matchAll(/\(([^)]*)\)/g)];
+          html += `<div class="question-text" style="margin-bottom:12px;">`;
+          parts.forEach((part, i) => {
+            html += part;
+            if (i < matches.length) {
+              const choices = q.choices[i];
+              html += `<select id="t${testIdx}q${qIdx}a${i}">
+                <option value="">--Chọn--</option>
+                ${choices.map(c => `<option value="${c}">${c}</option>`).join('')}
+              </select>`;
+            }
+          });
+          html += `</div>`;
+        });
+        html += `<button onclick="submitTest(${testIdx})">Kiểm tra kết quả</button></div>`;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function submitTest(testIdx) {
+      const test = tests[testIdx];
+      let ansCount = 0;
+      test.questions.forEach((q, qIdx) => {
+        q.answers.forEach((ans, i) => {
+          const sel = document.getElementById(`t${testIdx}q${qIdx}a${i}`);
+          if (sel) {
+            if (sel.value === ans) {
+              sel.classList.add("correct");
+              sel.classList.remove("wrong");
+            } else {
+              sel.classList.add("wrong");
+              sel.classList.remove("correct");
+              // Hiện đáp án đúng bên dưới
+              const ansDivId = `ans${testIdx}${qIdx}${i}`;
+              if (!document.getElementById(ansDivId)) {
+                const ansDiv = document.createElement("div");
+                ansDiv.id = ansDivId;
+                ansDiv.style.color = "#e74c3c";
+                ansDiv.style.fontSize = "13px";
+                ansDiv.style.marginTop = "5px";
+                ansDiv.innerHTML = `Đáp án đúng: <b>${ans}</b>`;
+                sel.parentNode.appendChild(ansDiv);
+              }
+            }
+            sel.disabled = true;
+            ansCount++;
+          }
+        });
+      });
+      if (ansCount === 0) alert("Bạn chưa chọn câu nào!");
+    }
+
+    renderTests();
+  </script>
+</body>
+</html>

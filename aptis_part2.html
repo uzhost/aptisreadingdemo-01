@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APTIS Reading Part 2 - Drag & Drop</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 0;
+    }
+    .header-bar {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 40px 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .header-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(10px);
+    }
+    .header-bar::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.3; }
+      50% { transform: scale(1.1); opacity: 0.6; }
+    }
+    .header-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+    .aptis-link {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-weight: 600;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .aptis-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    .aptis-link:hover::before {
+      left: 100%;
+    }
+    .aptis-link:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    }
+    .aptis-link svg {
+      transition: transform 0.3s ease;
+    }
+    .aptis-link:hover svg {
+      transform: translateX(2px);
+    }
+    .main-title {
+      color: #fff !important;
+      font-size: 2.5rem !important;
+      font-weight: 800 !important;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      letter-spacing: 1px;
+      margin: 0 auto;
+      position: relative;
+      background: linear-gradient(45deg, #fff, #f0f0f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+    }
+    .main-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+      border-radius: 2px;
+    }
+    .test-box {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 25px auto;
+      max-width: 900px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .test-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+    }
+    .test-box h2 {
+      color: #333;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .question-text {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #333;
+      margin-bottom: 12px;
+    }
+    .drop-area {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .drop-slot {
+      min-height: 54px;
+      border: 2px dashed #bfc9d1;
+      border-radius: 10px;
+      background: #f7fafd;
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      font-size: 1.08rem;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 2px;
+    }
+    .drop-slot.dragover {
+      border-color: #1976d2;
+      background: #eaf6fb;
+    }
+    .drag-item {
+      background: #e3f2fd;
+      border: 1.5px solid #90caf9;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      font-size: 1.08rem;
+      cursor: grab;
+      box-shadow: 0 2px 8px rgba(52,152,219,0.08);
+      transition: box-shadow 0.2s, background 0.2s;
+      user-select: none;
+    }
+    .drag-item:active {
+      background: #bbdefb;
+      box-shadow: 0 4px 16px rgba(52,152,219,0.18);
+    }
+    .drag-item.dragging {
+      opacity: 0.5;
+    }
+    .drop-slot.correct {
+      background: #d5f5e3;
+      border-color: #27ae60;
+      color: #27ae60;
+      font-weight: bold;
+    }
+    .drop-slot.wrong {
+      background: #f9e0e0;
+      border-color: #e74c3c;
+      color: #e74c3c;
+      font-weight: bold;
+    }
+    .answer-key {
+      color: #e74c3c;
+      font-size: 0.98rem;
+      margin-top: 2px;
+      margin-bottom: 8px;
+    }
+    .submit-btn {
+      margin-top: 24px;
+      padding: 10px 32px;
+      background: linear-gradient(90deg, #1976d2 60%, #4fc3f7 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(52,152,219,0.10);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .submit-btn:hover {
+      background: linear-gradient(90deg, #1565c0 60%, #4fc3f7 100%);
+      box-shadow: 0 6px 18px rgba(52,152,219,0.18);
+    }
+    .nav-btn {
+      margin: 0 8px;
+      padding: 8px 22px;
+      background: #f7fafd;
+      color: #1976d2;
+      border: 1.5px solid #e0e6ed;
+      border-radius: 8px;
+      font-size: 1.08rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .nav-btn:hover {
+      background: #eaf6fb;
+    }
+    .current-idx {
+      font-size: 1.08rem;
+      color: #1976d2;
+      font-weight: 600;
+      margin: 0 8px;
+    }
+    .main-nav {
+      position: absolute;
+      top: 40px; /* Adjust based on header-bar padding */
+      left: 20px; /* Adjust based on header-bar padding */
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-weight: 600;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    .nav-link:hover::before {
+      left: 100%;
+    }
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    }
+    .nav-link svg {
+      transition: transform 0.3s ease;
+    }
+    .nav-link:hover svg {
+      transform: translateX(2px);
+    }
+    @media (max-width: 900px) {
+      .test-box { padding: 18px 4px 18px 4px; }
+    }
+    @media (max-width: 800px) {
+      .test-box { margin: 12px 4px; padding: 12px 2px; }
+    }
+    @media (max-width: 768px) {
+      .header-bar { padding: 30px 15px; }
+      .header-content { flex-direction: column; gap: 16px; }
+      .main-title { font-size: 2rem !important; text-align: center; }
+      .aptis-link { font-size: 0.9rem; padding: 10px 20px; }
+      .test-box { margin: 20px 6px; padding: 10px; }
+    }
+    @media (max-width: 480px) {
+      .main-title { font-size: 1.6rem !important; }
+      .test-box { padding: 6px 2px; }
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+    <div class="header-content">
+      <a href="index.html" class="aptis-link">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M7 10h6M11 7l3 3-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Quay lại trang chủ</span>
+      </a>
+      <h1 class="main-title">APTIS Reading Part 2</h1>
+    </div>
+  </div>
+  <div class="test-box">
+    <div class="left-col">
+      <div class="title" id="main-title"></div>
+      <div id="drag-list"></div>
+      <div style="margin-bottom:10px;">(Kéo các câu bên trên vào đúng thứ tự bên dưới)</div>
+      <div id="drop-area" class="drop-area"></div>
+      <div class="nav-row" style="display:flex;justify-content:center;align-items:center;margin-top:18px;gap:12px;">
+        <button class="nav-btn" onclick="prevTest()">← Previous</button>
+        <span class="current-idx" id="current-idx"></span>
+        <button class="nav-btn" onclick="nextTest()">Next →</button>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:16px;">
+        <button class="submit-btn" onclick="checkAnswers()">Kiểm tra kết quả</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Dữ liệu 30 bài (chỉ lấy phần câu trả lời đúng, đảo lộn sẽ random mỗi lần)
+    const tests = [
+      {
+        title: "To successfully finish the assignment, follow these instructions:",
+        answer: [
+          "First, it is a good idea for you to read your work and correct spelling mistakes.",
+          "When you have corrected all mistakes, print out your assignment.",
+          "Also, remember to print a separate cover sheet and attach it to your assignment.",
+          "You hand your assignment and attached document to the front desk in the library.",
+          "A staff will check and confirm that you complete."
+        ]
+      },
+      {
+        title: "To solve a problem scientifically, you should follow a series of steps:",
+        answer: [
+          "The first step is to find out how much you know about the problem.",
+          "The next one is to form a hypothesis, or an idea, based on the information you have.",
+          "Then, you need to perform experiments to see if those ideas are true or not.",
+          "You can also compare your results with similar experiments in the past.",
+          "In this way, you add to the knowledge about the subject for future experiments."
+        ]
+      },
+      {
+        title: "To set up a new printer, follow these instructions:",
+        answer: [
+          "Firstly, find an appropriate place to put the printer in.",
+          "When the printer is in place, turn it on by switching the buttons on the sides.",
+          "A light comes on at the front of the printer when the power is on.",
+          "If the light is green, the printer is ready to use.",
+          "Before using, remember to put some papers into the tray."
+        ]
+      },
+      {
+        title: "Please follow the instructions below to ensure you have a wonderful visit at our hospital:",
+        answer: [
+          "When you arrive, go straight to the main office to collect your ticket.",
+          "You must show this to the member of staff before going to the hospital.",
+          "Inside the building, you will see a photograph exhibition.",
+          "Before you look at the picture, a guide will tell you about the day's event.",
+          "These activities include feeding and playing with the animals."
+        ]
+      },
+      {
+        title: "The unexpected traffic jam today was mainly due to problems regarding traffic lights:",
+        answer: [
+          "They were out of order, and the traffic was moving slowly.",
+          "This caused a long delay on the road.",
+          "As a result of the delay, many people were not able to get to work on time.",
+          "Fortunately, by the evening, the traffic lights worked again.",
+          "Therefore, there was no further delay, and people could get home after work."
+        ]
+      },
+      {
+        title: "Albert Einstein was one of the world’s greatest scientists:",
+        answer: [
+          "As a child, he moved to a new city in Germany, where he discovered his love for science and math.",
+          "His best friend in his new class shared his interest in inventions and helped him explore new ideas.",
+          "She later became his wife, supporting him through his studies and scientific discoveries.",
+          "These were so advanced that they changed the way people thought about physics and the universe.",
+          "Princeton University in the USA invited him to become professor for his outstanding scientific discoveries."
+        ]
+      },
+      {
+        title: "Please follow these steps to ensure a smooth parking experience:",
+        answer: [
+          "When you arrive, take the ticket from the machine by the entrance.",
+          "The ticket will have information of time and date.",
+          "Please display the ticket with this information in the window of your car.",
+          "Before you leave, put the ticket into the machine by the gate.",
+          "The machine will read the information on the ticket and show you how much you have to pay."
+        ]
+      },
+      {
+        title: "Please follow these steps carefully to ensure your safety:",
+        answer: [
+          "When you hear the alarm, leave your bags",
+          "Next, walk calmly to the doors marked \"Emergency Exit\".",
+          "Through these doors you will see the stairs",
+          "When you reach the bottom of the stairs, leave the building",
+          "Outside, please gather on the grass"
+        ]
+      },
+      {
+        title: "To ensure successful growth, follow these steps when planting roses:",
+        answer: [
+          "All you need is some earth, a big pot and some old potatoes.",
+          "An old potato has a little root, and it is a little green and it is not good for eating",
+          "That color means it is perfect for growing, then you pull a hole on earth and put it deep down",
+          "When it's done, put it in a sunny place and water it every day",
+          "This care will help the potato grow in a couples of weeks"
+        ]
+      },
+      {
+        title: "Before starting your deliveries, make sure to check in at the office:",
+        answer: [
+          "You should arrive at the main office by 6.30 am and collects your keys",
+          "In the office you can also collect a map of your route",
+          "You must follow the route on the map to deliver the packages",
+          "When you have completed all delivery, return to the office",
+          "You must return your keys to the office manager after you get back."
+        ]
+      },
+      {
+        title: "When looking for a new home, it's crucial to follow certain steps:",
+        answer: [
+          "The first and most important step is to assess your personal needs carefully.",
+          "In order to choose the right place, you must research the neighborhood thoroughly.",
+          "The most important factor is the cost of the homes in that area.",
+          "Other factors to consider are the availability of schools, parks, and shops nearby.",
+          "Such requirements, of course, will greatly influence your overall satisfaction and happiness."
+        ]
+      },
+      {
+        title: "Charlie Chaplin was born in England and grew up in London:",
+        answer: [
+          "He first performed at one of the city's theater at the age of 5",
+          "Although he was very young, he was very popular on the stage",
+          "His popularity grew, he soon appeared in all the theaters of the country.",
+          "After being famous at home, he moved to America and joined a traveling theater group",
+          "He traveled widely with this group, then decided there to make it his home."
+        ]
+      },
+      {
+        title: "Zinedine Zidane's journey began in Marseille, where he honed his skills:",
+        answer: [
+          "As a child, he played for several teams close to his home in Marseille.",
+          "He then left home to join Cannes Football Club in the south of France.",
+          "While he was in the club, he was seen as a talented player.",
+          "Later, he left France to advance his career in Italy and Spain, where he eventually stopped playing.",
+          "Since retiring, he has worked as a manager for a football club."
+        ]
+      },
+      {
+        title: "From a young age, Milly Brook had a strong passion for sports:",
+        answer: [
+          "As a child, she spent countless hours practicing her favorite sport every day.",
+          "Because of this dedication and passion, she quickly improved her skills significantly.",
+          "The hard work and determination proved to be successful and rewarding.",
+          "They invited her to join their team, recognizing her exceptional talent and commitment.",
+          "A year later, after extensive training and dedication, she became a key player."
+        ]
+      },
+      {
+        title: "To go to the conference hall, follow these instructions:",
+        answer: [
+          "When you arrive at the conference hall, give your booking number",
+          "A staff member will note this down and give you a welcome pack",
+          "Inside you will find a schedule of events and information about the key speaker.",
+          "If you would like to listen to his talk, it will take place in the main hall at midday",
+          "After finished, there will be time for questions"
+        ]
+      },
+      {
+        title: "The Natural History Center has many important attractions:",
+        answer: [
+          "The most important of these is The natural history center",
+          "The entrance to the center is on the town's main square",
+          "As you enter the square, you will see a set of stairs to your left",
+          "The ticket office is at the top of these steps, the staffs there are very helpful",
+          "As well as selling tickets, the staffs provide maps and useful tour information"
+        ]
+      },
+      {
+        title: "First, you need to sign in to your account using your credentials:",
+        answer: [
+          "In your account, you have to click on the \"Open a new window\" button.",
+          "When you do this, a new window will be automatically opened for you.",
+          "Simply drag and drop the files into the designated area provided.",
+          "After that, go back to your account and click the submit button.",
+          "Finally, check your email to confirm that your submission was successful."
+        ]
+      },
+      {
+        title: "If you are coming to the conference, you have to follow these steps:",
+        answer: [
+          "When you arrive at the conference hall, show booking number then receive a guide book.",
+          "A staff member will note this down and give you a welcoming package.",
+          "Inside you will find a schedule of events and the information of the speaker.",
+          "If you would like to listen to his talk, it is in the midhall.",
+          "After finishes, there will be time for questions."
+        ]
+      },
+      {
+        title: "Jay Mist is a famous American actor but his parents come from India:",
+        answer: [
+          "When he was young, his parent left their country and moved to the United States",
+          "He started his high school and began strength training in his free time",
+          "Jay was really good at it and entered some body building competitions",
+          "At one of these events, an acting agent saw him and gave him a starring role",
+          "It was a big action company so he became successful quickly"
+        ]
+      },
+      {
+        title: "To plant roses effectively, follow these steps:",
+        answer: [
+          "In the chosen place, dig a deep hole in the ground",
+          "Put the base of the rose and cover the root with lease earth",
+          "Push this down by hand until the tree is straight",
+          "Once you planted it, water them everyday.",
+          "The amount of water depends on the weather condition"
+        ]
+      },
+      {
+        title: "In order to join 'Race for Charity', please follow this instruction:",
+        answer: [
+          "On arrival at the park, go to the information point at the North",
+          "Runners must register here at least half an hour before the race starts at 9 a.m",
+          "To do this, you just need to show your photo card",
+          "In return, a member of staff will give you a numbered band to wear",
+          "Please put it on immediately and join in with the other competitors in the warm up area"
+        ]
+      },
+      {
+        title: "This is the guideline for all student attending the new course:",
+        answer: [
+          "When you arrive at the college, go to the desk",
+          "A member of staff will ask your name and address",
+          "He or she will enter this information into the computer and give you the identification card",
+          "You can use this card to borrow books in the library or access the online study material",
+          "You will find these links on your home page"
+        ]
+      },
+      {
+        title: "Following these instructions to complete the end of your term report:",
+        answer: [
+          "Before writing, spend a week looking at websites for the information you need",
+          "Remember to save the links to those websites and include them in your report.",
+          "You should also include a list of any books you use for reference",
+          "When you have finished writing, read through to correct spelling mistakes",
+          "After making corrections, send your report by email to the college secretary."
+        ]
+      },
+      {
+        title: "When you arrive at the conference building, head towards the entrance:",
+        answer: [
+          "When you have a conference pass, go to the lift on the right.",
+          "Take the lift to the third floor, go to the main desk.",
+          "Show your pass from the conference to a member of staff at the desk.",
+          "He or she will give you a seat number for the talk at the main hall.",
+          "Once you enter the hall, someone will find the seat for you."
+        ]
+      },
+      {
+        title: "When you arrive at the bike collection point, locate an available cycle:",
+        answer: [
+          "Go to the collection point and touch the screen with your bank card",
+          "Choose 'Hire the cycle', follow the instructions to get your release code",
+          "Enter your code in the lock on the bike and wait for the light green",
+          "When the light shows, you can unlock the bike and start your journey",
+          "At the end of your ride, return the bike at any collection point"
+        ]
+      },
+      {
+        title: "I wanted to start driving as soon as possible after passing my test:",
+        answer: [
+          "I had just passed my test and was excited to begin driving soon.",
+          "However, I didn't have a car, so started searching for one immediately.",
+          "So, when saw an advertisement for a used car, I was interested.",
+          "I called the number on the advert to get more information about it.",
+          "We agreed on a price that was reasonable for both after a short negotiation."
+        ]
+      },
+      {
+        title: "This is the short summary of Tom Harper life:",
+        answer: [
+          "When he was young, he began writing short stories for a magazine",
+          "He soon wrote regularly for that magazine, sharing his creative ideas with many readers",
+          "At one point, he almost left his job, but then he decided to create unusual characters",
+          "The characters he imagined became some of the most famous in literature",
+          "This popularity made him rich and successful"
+        ]
+      },
+      {
+        title: "The following is the instruction of how to use the key card:",
+        answer: [
+          "To access the building and use the lift, you need to use the key card",
+          "If you lose this, please see the staff member at the front desk",
+          "He or she will ask your name and flat number and will write these down",
+          "You will also need to show him or her your identification card",
+          "He or she will take a copy of it and give you a new card"
+        ]
+      },
+      {
+        title: "Belly's life journey was deeply connected to the city of Shanghai:",
+        answer: [
+          "She was born in Shanghai, a bustling city full of life.",
+          "A few years after she finished school, she moved abroad.",
+          "However, Belly missed China and often thought about her homeland.",
+          "In the 1980s, she finally returned to Shanghai to visit.",
+          "At that time, Shanghai was an exciting and vibrant place."
+        ]
+      },
+      {
+        title: "To use the parking lot, kindly go to the parking area:",
+        answer: [
+          "The ticket will show information about the date and time you enter.",
+          "When you arrive, please take the ticket from the machine near the entrance.",
+          "Please display the ticket with this information in the window of your car.",
+          "Before you leave, give the ticket to the machine at the gate.",
+          "The machine will read the ticket and tell you how much you have to pay."
+        ]
+      }
+    ];
+    // Thêm các bài còn lại (do giới hạn ký tự, bạn có thể copy tiếp phần answer từ dữ liệu bạn gửi vào đây)
+
+    // --- END DATA ---
+
+    let current = 0;
+    function shuffle(arr) {
+      let a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function renderTest(idx) {
+      const test = tests[idx];
+      document.getElementById('main-title').textContent = test.title;
+      document.getElementById('current-idx').textContent = `Bài ${idx + 1}/${tests.length}`;
+      // Xóa cũ
+      const dropArea = document.getElementById('drop-area');
+      dropArea.innerHTML = '';
+      const dragList = document.getElementById('drag-list');
+      dragList.innerHTML = '';
+      // Tạo drag list (random)
+      const shuffled = shuffle(test.answer);
+      shuffled.forEach((text, i) => {
+        const item = document.createElement('div');
+        item.className = 'drag-item';
+        item.id = 'drag-' + i;
+        item.draggable = true;
+        item.textContent = text;
+        item.ondragstart = e => {
+          item.classList.add('dragging');
+          e.dataTransfer.setData('text/plain', item.id);
+        };
+        item.ondragend = e => item.classList.remove('dragging');
+        dragList.appendChild(item);
+      });
+      // Tạo drop area
+      for (let i = 0; i < test.answer.length; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'drop-slot';
+        slot.dataset.idx = i;
+        slot.ondragover = e => { e.preventDefault(); slot.classList.add('dragover'); };
+        slot.ondragleave = e => slot.classList.remove('dragover');
+        slot.ondrop = e => {
+          e.preventDefault();
+          slot.classList.remove('dragover');
+          const dragId = e.dataTransfer.getData('text/plain');
+          const dragItem = document.getElementById(dragId);
+          if (dragItem) {
+            if (slot.firstChild) {
+              document.getElementById('drag-list').appendChild(slot.firstChild);
+            }
+            slot.appendChild(dragItem);
+          }
+        };
+        dropArea.appendChild(slot);
+      }
+    }
+
+    function checkAnswers() {
+      const test = tests[current];
+      const slots = document.querySelectorAll('.drop-slot');
+      let allCorrect = true;
+      slots.forEach((slot, i) => {
+        slot.classList.remove('correct', 'wrong');
+        const oldKey = slot.querySelector('.answer-key');
+        if (oldKey) oldKey.remove();
+        if (slot.firstChild && slot.firstChild.classList.contains('drag-item')) {
+          if (slot.firstChild.textContent.trim() === test.answer[i]) {
+            slot.classList.add('correct');
+          } else {
+            slot.classList.add('wrong');
+            allCorrect = false;
+            const ans = document.createElement('div');
+            ans.className = 'answer-key';
+            ans.innerHTML = 'Đáp án đúng: <b>' + test.answer[i] + '</b>';
+            slot.appendChild(ans);
+          }
+        } else {
+          slot.classList.add('wrong');
+          allCorrect = false;
+          const ans = document.createElement('div');
+          ans.className = 'answer-key';
+          ans.innerHTML = 'Đáp án đúng: <b>' + test.answer[i] + '</b>';
+          slot.appendChild(ans);
+        }
+      });
+      if (allCorrect) alert('Chúc mừng bạn đã sắp xếp đúng!');
+    }
+
+    function nextTest() {
+      if (current < tests.length - 1) {
+        current++;
+        renderTest(current);
+      }
+    }
+    function prevTest() {
+      if (current > 0) {
+        current--;
+        renderTest(current);
+      }
+    }
+
+    // Khởi tạo bài đầu tiên
+    renderTest(current);
+  </script>
+</body>
+</html> 

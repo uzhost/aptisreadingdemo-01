@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APTIS Reading Part 4</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 0;
+    }
+    .header-bar {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 40px 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .header-bar::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(10px);
+    }
+    .header-bar::after {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.3; }
+      50% { transform: scale(1.1); opacity: 0.6; }
+    }
+    .header-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+    .back-link {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-weight: 600;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .back-link::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    .back-link:hover::before { left: 100%; }
+    .back-link:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      color: #fff;
+    }
+    .main-title {
+      color: #fff !important;
+      font-size: 2.5rem !important;
+      font-weight: 800 !important;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      letter-spacing: 1px;
+      margin: 0 auto;
+      position: relative;
+      background: linear-gradient(45deg, #fff, #f0f0f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+    }
+    .main-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+      border-radius: 2px;
+    }
+    .test-box {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 25px auto;
+      max-width: 900px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .test-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+    }
+    .test-box h2 {
+      color: #333;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .set-dropdown-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+    .set-dropdown-label {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+    }
+    .set-dropdown-select {
+      padding: 8px 12px;
+      border: 2px solid #4fc3f7;
+      border-radius: 10px;
+      font-size: 1.08rem;
+      background: #fff;
+      color: #1976d2;
+      box-shadow: 0 2px 8px rgba(52,152,219,0.10);
+      font-weight: 600;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+      min-width: 170px;
+    }
+    .set-dropdown-select:focus {
+      border-color: #1976d2;
+      box-shadow: 0 4px 16px rgba(25,118,210,0.10);
+    }
+    .answer-input {
+      width: 320px;
+      height: 36px;
+      font-size: 1.1rem;
+      text-align: left;
+      border-radius: 7px;
+      border: 1.5px solid #bfc9d1;
+      transition: border-color 0.2s, background 0.2s;
+      margin-left: 10px;
+    }
+    .answer-input:focus {
+      border-color: #1976d2;
+      background: #eaf6fb;
+      outline: none;
+    }
+    .answer-input.correct {
+      background: #d5f5e3 !important;
+      border-color: #27ae60 !important;
+      color: #27ae60 !important;
+      font-weight: bold;
+    }
+    .answer-input.wrong {
+      background: #f9e0e0 !important;
+      border-color: #e74c3c !important;
+      color: #e74c3c !important;
+      font-weight: bold;
+    }
+    .answer-key {
+      color: #e74c3c;
+      font-size: 0.98rem;
+      margin-left: 8px;
+    }
+    .submit-btn {
+      margin-top: 24px;
+      padding: 10px 32px;
+      background: linear-gradient(90deg, #1976d2 60%, #4fc3f7 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(52,152,219,0.10);
+      transition: background 0.2s, box-shadow 0.2s;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .submit-btn:hover {
+      background: linear-gradient(90deg, #1565c0 60%, #4fc3f7 100%);
+      box-shadow: 0 6px 18px rgba(52,152,219,0.18);
+    }
+    .main-nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .nav-link {
+      padding: 8px 15px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+    @media (max-width: 900px) {
+      .test-box { padding: 8px 2px 18px 2px; }
+      .header-bar { padding: 18px 0 16px 0; border-radius: 0 0 12px 12px; }
+    }
+    @media (max-width: 600px) {
+      .main-title { font-size: 1.6rem !important; }
+      .test-box { padding: 6px 2px; }
+      .answer-input { width: 100% !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+    <div class="header-content">
+      <a href="index.html" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M13 10H7M9 7l-3 3 3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Quay lại trang chủ</span>
+      </a>
+      <h1 class="main-title">APTIS Reading Part 4</h1>
+    </div>
+  </div>
+  <div class="test-box">
+    <div class="set-dropdown-bar">
+      <span class="set-dropdown-label">Chọn đề:</span>
+      <select class="set-dropdown-select" id="topicDropdown"></select>
+    </div>
+    <div id="topicContent"></div>
+  </div>
+  <script>
+    // All topics data
+    const topics = [
+      {
+        name: 'Đề 1: CHILDREN & EXERCISE',
+        headings: [
+          'A. Factors Contributing to Inactivity',
+          'B. A Design for Exercise and for Study',
+          'C. The Success of a Simple Idea',
+          'D. The Wider Effects of Regular Exercise',
+          'E. Ways in Which Environment Can Influence Behaviour',
+          'F. A Design for Exercise and for Study',
+          'G. Achieving the Right Balance',
+          'H. The situation has the potential to become worse'
+        ],
+        paragraphs: [
+          `In recent years, children have become increasingly inactive. While technology often receives blame for this trend, it is not the only factor at play. Urbanization has led to a lack of safe play spaces for kids. Many neighborhoods no longer have parks or playgrounds, forcing children to stay indoors. This combination of screen time and limited physical activity opportunities is contributing to a decline in children's overall fitness and health.`,
+          `Currently, the issue of children not getting enough exercise is worsening, largely due to the time they spend staring at screens. The allure of laptops and smartphones is hard to resist, making it difficult for both parents and children to limit their use. As awareness grows about the importance of physical activity, it is essential for everyone to recognize the seriousness of this problem and work together to find effective solutions that encourage a more active lifestyle.`,
+          `One inspiring example comes from a teacher who implemented a program called the Daily Mile. Each day, students are encouraged to run at least one mile, and this simple idea quickly gained popularity. It has won awards for its effectiveness and has spread to over 3,500 schools in more than 30 countries, thanks to media coverage and positive testimonials. This initiative highlights how even small changes can have a significant impact on promoting physical activity among children.`,
+          `The Daily Mile program not only enhances fitness levels among students but also has surprising benefits for their academic performance. Teachers have reported that students participating in this program are more focused and alert during lessons. Psychologists support this observation, suggesting that a healthy body leads to a healthy mind. The saying “a strong body, a strong mind” appears to hold true, as regular physical activity positively influences students' ability to learn and retain information.`,
+          `The design of our environments can significantly impact how we behave. For instance, workplaces are often designed to enhance productivity, and homes are structured to encourage communication. Similarly, schools can be designed to promote physical activity. By creating spaces that encourage movement, such as open areas for play and exercise, educators can foster a more active lifestyle among students, helping to counteract the trend of inactivity.`,
+          `One innovative architect from Japan has designed a kindergarten with a unique approach. The playground is structured like a running track, allowing children to run and play freely. This creative design has proven successful and has even received awards for its impact on children's activity levels. Such thoughtful architectural designs can inspire other schools to rethink how they create environments that promote both learning and physical activity.`,
+          `The Daily Mile initiative and the Japanese architect's playground represent two ends of the economic spectrum. The Daily Mile is a cost-effective program that requires minimal investment, while the architect’s design involves significant funding. Local authorities must consider various factors when striving for a balance between promoting physical activity and managing budgets. By exploring both affordable and innovative solutions, communities can create environments that support children’s health and well-being.`
+        ],
+        keys: ['A','H','C','D','E','B','G']
+      },
+      {
+        name: 'Đề 2: Frozen Antarctica',
+        headings: [
+          'A. Where is the end of the earth?',
+          'B. Less effort needed',
+          'C. Race to the pole',
+          'D. Hidden geography',
+          'E. First step on the ice',
+          'F. Why is it so cold?',
+          'G. Who is in charge?'
+        ],
+        paragraphs: [
+          'This continent is governed by an international agreement known as the Antarctic Treaty System, established in 1961. This treaty ensures that the region is utilized for peaceful purposes and encourages global scientific collaboration. While no nation officially owns this land, several countries—Argentina, Australia, Chile, France, New Zealand, Norway, and the United Kingdom—assert territorial claims. The treaty forbids military activity, resource extraction, and nuclear tests, designating the area for research and conservation efforts. As a result, scientists from various countries gather to study this unique environment, sharing their discoveries for the benefit of humanity.',
+          'Setting foot on Antarctica is a significant event for any explorer or scientist. The journey typically begins in South America, where travelers board a ship or a plane to cross the Drake Passage. Once they arrive, the first step on the ice is both exhilarating and daunting. Visitors are immediately struck by the vast expanse of white, the crisp, cold air, and the breathtaking scenery. The sound of crunching ice underfoot serves as a reminder of the remote and untouched nature of this continent, a place where human footprints are few and far between.',
+          'Positioned around the South Pole, Antarctica represents the southernmost point on the planet. The continent\'s remoteness contributes to its mystique, drawing adventurers and researchers alike. The harsh conditions, including bitter cold and relentless winds, create a sense of otherworldliness. In many ways, it feels like the last frontier on Earth, where the landscape remains largely unspoiled and the natural world thrives in its purest form.',
+          'Beneath the massive ice sheets lies a concealed landscape that reveals much about the planet’s geological history. This region hosts the largest ice mass globally, covering approximately 98 percent of its area. The ice conceals a variety of geological features, including mountains and valleys. Researchers analyze ice cores extracted from deep within the layers to uncover details about past climates and atmospheric conditions. These investigations provide vital information for understanding global climate change and its potential implications for our world.',
+          'The pursuit of the southernmost point in the early 20th century captivated many. Adventurers such as Robert Falcon Scott and Roald Amundsen undertook perilous journeys to achieve this milestone. Amundsen\'s successful expedition in 1911 marked a significant achievement in exploration, while Scott\'s tragic story underscored the risks associated with such endeavors. These tales of courage and ambition continue to inspire modern explorers, highlighting the fascination that this harsh terrain holds.',
+          'Recent advancements in technology have made reaching this icy expanse easier than in the past. Modern icebreakers and advanced aircraft enable safer and more efficient travel. This accessibility has led to a rise in interest for tourism, allowing more people to experience the breathtaking beauty of the landscape. However, the increase in visitors raises concerns about the potential environmental impact, emphasizing the necessity for sustainable practices to safeguard this delicate ecosystem.',
+          'The extreme low temperatures in this region result mainly from its high elevation and geographic positioning. Being located over the South Pole means it receives minimal direct sunlight, especially during the prolonged winter months of darkness. Average temperatures can plummet below -60°C (-76°F), with summer still remaining quite frigid. The reflective nature of ice further contributes to the chilling climate. Understanding these climatic influences is crucial for scientists studying global weather systems and shifts in climate patterns.'
+        ],
+        keys: ['G','E','A','D','C','B','F']
+      },
+      {
+        name: 'Đề 3: The Golden Age of Tulip Trade',
+        headings: [
+          'A. The Dutch Golden Age',
+          'B. The Tulip Mania',
+          'C. The Economic Impact',
+          'D. The Role of the Dutch East India Company',
+          'E. The Global Influence',
+          'F. The Legacy',
+          'G. The Current State'
+        ],
+        paragraphs: [
+          'The Dutch Golden Age, spanning roughly from 1600 to 1700, was a period of unprecedented prosperity and influence for the Netherlands. This era was characterized by a remarkable economic boom, driven by the tulip trade, maritime expansion, and the Dutch East India Company (VOC). The Dutch Republic emerged as a dominant global power, rivaling even the might of Spain and England. The VOC, founded in 1602, was the world\'s first multinational corporation, controlling trade routes and establishing colonies worldwide.',
+          'The tulip trade, which began in the 1630s, was a speculative frenzy that swept the Netherlands. People from all walks of life, including merchants, farmers, and even clergy, became involved in this newfound obsession. The demand for tulips, particularly the rare and exotic varieties, skyrocketed, leading to a massive bubble in the Dutch economy. The price of a single tulip bulb could be worth more than 10 times the annual salary of a skilled craftsman.',
+          'The economic impact of the tulip mania was profound. The Dutch Republic\'s wealth grew exponentially, enabling the construction of magnificent buildings, the development of a world-class navy, and the establishment of a vast colonial empire. The VOC\'s influence extended across the globe, from Japan to Brazil, establishing trading posts and colonies. This period of prosperity also led to significant advancements in science, art, and architecture.',
+          'The Dutch East India Company played a pivotal role in the Dutch Golden Age. The VOC was granted a monopoly on trade with the East Indies, which allowed it to control the spice trade and establish a dominant position in global commerce. The company\'s success was due to its innovative business model, strong navy, and ruthless tactics against competitors. The VOC\'s influence extended far beyond trade, shaping Dutch foreign policy and domestic institutions.',
+          'The global influence of the Dutch Golden Age was immense. The Dutch Republic became a model of prosperity and stability, attracting skilled immigrants from across Europe. The Dutch language, culture, and legal system became influential worldwide. The Dutch Republic\'s navy was among the most powerful in the world, enabling it to dominate global trade routes. This period of dominance laid the foundation for the Dutch Republic\'s status as a major world power for centuries to come.',
+          'The legacy of the Dutch Golden Age is still felt today. The Netherlands remains one of the world\'s leading exporters, with a strong focus on agriculture, technology, and innovation. The Dutch Republic\'s reputation for tolerance and openness continues to attract people from around the world. The Dutch language, with its rich history and diverse dialects, is spoken by millions of people worldwide. The Dutch Republic\'s commitment to freedom and democracy has shaped modern society.',
+          'The current state of the Netherlands is a testament to the enduring legacy of the Dutch Golden Age. The country remains one of the wealthiest in the world, with a high standard of living and a strong focus on sustainability. The Dutch Republic\'s reputation for innovation and creativity continues to attract people from around the world. The Netherlands is a global leader in fields such as agriculture, technology, and environmental protection.'
+        ],
+        keys: ['B','A','C','D','E','F','G']
+      },
+      {
+        name: 'Đề 4: The Industrial Revolution',
+        headings: [
+          'A. The Origins',
+          'B. The Impact on Society',
+          'C. The Impact on the Environment',
+          'D. The Impact on Work',
+          'E. The Impact on Living Conditions',
+          'F. The Impact on Education',
+          'G. The Impact on Health'
+        ],
+        paragraphs: [
+          'The Industrial Revolution, which began in the late 18th century, marked a significant turning point in human history. It transformed the way we produce goods, the way we live, and the way we work. The widespread adoption of machinery and new technologies led to unprecedented productivity and economic growth. This period of rapid change also brought about profound social, environmental, and health impacts.',
+          'The impact on society was profound. The rapid urbanization that accompanied the Industrial Revolution led to overcrowded cities, poor living conditions, and the emergence of new social problems. The working class faced long hours, low wages, and dangerous working conditions. The middle class grew, but inequality increased. The traditional family structure was disrupted, and new social norms emerged.',
+          'The impact on the environment was significant. The burning of fossil fuels and the widespread use of chemicals led to air pollution, water pollution, and soil degradation. The deforestation of large areas for industrial purposes and the use of coal for heating contributed to climate change. The Industrial Revolution also led to the exploitation of natural resources and the depletion of non-renewable sources.',
+          'The impact on work was profound. The introduction of machinery and new technologies led to the mechanization of many industries, reducing the need for skilled labor. This resulted in a shift from artisanal to industrial production. The work itself changed, becoming more monotonous and repetitive. Workers faced long hours, low wages, and limited opportunities for advancement.',
+          'The impact on living conditions was mixed. While the Industrial Revolution brought about significant improvements in food production and transportation, many people still lived in cramped, unsanitary conditions. The rise of the middle class led to the construction of new housing, but this often came at the expense of the poor. The availability of goods increased, but prices often rose, making them less accessible to the working class.',
+          'The impact on education was significant. The Industrial Revolution led to the establishment of new educational institutions, particularly in the cities. Schools and universities were built to train workers for the new industries. The focus shifted from traditional subjects to practical skills. Education became more accessible to the middle class, but inequality persisted.',
+          'The impact on health was mixed. While the Industrial Revolution brought about significant improvements in living standards, it also led to new health problems. The poor living conditions and unsanitary environments contributed to the spread of diseases. The introduction of new technologies and chemicals in the workplace led to occupational hazards and health issues. The Industrial Revolution also contributed to the rise of new diseases and the spread of epidemics.'
+        ],
+        keys: ['A','B','C','D','E','F','G']
+      },
+      {
+        name: 'Đề 5: The Renaissance',
+        headings: [
+          'A. The Origins',
+          'B. The Impact on Art',
+          'C. The Impact on Science',
+          'D. The Impact on Education',
+          'E. The Impact on Society',
+          'F. The Impact on Politics',
+          'G. The Impact on Religion'
+        ],
+        paragraphs: [
+          'The Renaissance, which began in Italy in the 14th century, marked a significant turning point in European history. It was characterized by a renewed interest in classical antiquity, a revival of art, science, and education, and a shift in political and social structures. This period of cultural and intellectual rebirth laid the foundation for modern Western civilization.',
+          'The impact on art was profound. Artists began to break free from the constraints of medieval art, embracing realism and individualism. The Renaissance saw the birth of new artistic movements, such as the Renaissance Mannerism and the development of perspective in painting. Artists began to study human anatomy and nature, leading to a newfound appreciation for the beauty of the human form and the natural world.',
+          'The impact on science was significant. The Renaissance saw the emergence of new scientific methods and discoveries. Scientists began to question traditional beliefs and seek empirical evidence. The heliocentric theory of Copernicus challenged the geocentric theory of Ptolemy, leading to a revolution in our understanding of the universe. The Renaissance also saw the development of new mathematical tools and the establishment of scientific institutions.',
+          'The impact on education was profound. The Renaissance led to the establishment of new educational institutions, particularly in Italy. Universities were built to train students in a wide range of subjects, including philosophy, medicine, and law. The focus shifted from religious to secular education. Education became more accessible to the middle class, but inequality persisted.',
+          'The impact on society was significant. The Renaissance challenged traditional hierarchies and social structures. The middle class gained more influence, and new social norms emerged. The Renaissance also saw the rise of humanism, which emphasized the importance of individualism, reason, and the study of classical texts. This led to a more open and tolerant society.',
+          'The impact on politics was profound. The Renaissance saw the emergence of new political ideas and the rise of powerful city-states. The Medici family in Florence, for example, wielded significant political power. The Renaissance also saw the rise of nation-states and the development of new diplomatic relations. The Renaissance laid the foundation for modern nation-states and international relations.',
+          'The impact on religion was mixed. While the Renaissance challenged traditional religious beliefs and practices, it also saw a renewed interest in religious texts and the establishment of new religious orders. The Renaissance laid the foundation for modern religious institutions and the development of new theological ideas.'
+        ],
+        keys: ['A','B','C','D','E','F','G']
+      },
+      {
+        name: 'Đề 6: The French Revolution',
+        headings: [
+          'A. The Origins',
+          'B. The Impact on Society',
+          'C. The Impact on Politics',
+          'D. The Impact on Education',
+          'E. The Impact on Religion',
+          'F. The Impact on Art',
+          'G. The Impact on Science'
+        ],
+        paragraphs: [
+          'The French Revolution, which began in 1789, was a significant turning point in European history. It was characterized by a radical challenge to the existing social, political, and religious structures of France. The revolutionaries sought to create a more just and equitable society, based on the principles of liberty, equality, and fraternity.',
+          'The impact on society was profound. The traditional social hierarchy was challenged, and new social norms emerged. The middle class gained more influence, and the working class faced improved living conditions. The traditional family structure was disrupted, and new social problems arose. The revolutionaries sought to create a more egalitarian society.',
+          'The impact on politics was significant. The revolutionaries sought to establish a more democratic and representative government. The National Assembly, formed in 1789, declared the rights of man and citizen. The revolutionary government was overthrown in 1799 by Napoleon Bonaparte, but the principles of liberty, equality, and fraternity remained influential.',
+          'The impact on education was profound. The revolutionary government established new educational institutions, particularly in the cities. Schools and universities were built to promote secular education and the study of new ideas. The focus shifted from religious to secular education. Education became more accessible to the middle class, but inequality persisted.',
+          'The impact on religion was significant. The revolutionary government sought to establish a new religious order, based on the principles of liberty, equality, and fraternity. The revolutionary government was overthrown in 1799 by Napoleon Bonaparte, but the principles of liberty, equality, and fraternity remained influential.',
+          'The impact on art was profound. The revolutionary government sought to promote new artistic movements, particularly in the cities. Schools and universities were built to train artists in a new style. The focus shifted from religious to secular art. Art became more accessible to the middle class, but inequality persisted.',
+          'The impact on science was significant. The revolutionary government sought to promote new scientific discoveries and the establishment of scientific institutions. The revolutionary government was overthrown in 1799 by Napoleon Bonaparte, but the principles of liberty, equality, and fraternity remained influential.'
+        ],
+        keys: ['A','B','C','D','E','F','G']
+      },
+      {
+        name: 'Đề 7: The Industrial Revolution (continued)',
+        headings: [
+          'A. The Impact on Work',
+          'B. The Impact on Living Conditions',
+          'C. The Impact on Education',
+          'D. The Impact on Health',
+          'E. The Impact on Environment',
+          'F. The Impact on Society',
+          'G. The Impact on Politics'
+        ],
+        paragraphs: [
+          'The Industrial Revolution continued to have profound impacts on society, work, and living conditions. The impact on work was profound. The introduction of new technologies and machinery led to the mechanization of many industries, reducing the need for skilled labor. This resulted in a shift from artisanal to industrial production. The work itself changed, becoming more monotonous and repetitive. Workers faced long hours, low wages, and limited opportunities for advancement.',
+          'The impact on living conditions was mixed. While the Industrial Revolution brought about significant improvements in food production and transportation, many people still lived in cramped, unsanitary conditions. The rise of the middle class led to the construction of new housing, but this often came at the expense of the poor. The availability of goods increased, but prices often rose, making them less accessible to the working class.',
+          'The impact on education was significant. The Industrial Revolution led to the establishment of new educational institutions, particularly in the cities. Schools and universities were built to train workers for the new industries. The focus shifted from traditional subjects to practical skills. Education became more accessible to the middle class, but inequality persisted.',
+          'The impact on health was mixed. While the Industrial Revolution brought about significant improvements in living standards, it also led to new health problems. The poor living conditions and unsanitary environments contributed to the spread of diseases. The introduction of new technologies and chemicals in the workplace led to occupational hazards and health issues. The Industrial Revolution also contributed to the rise of new diseases and the spread of epidemics.',
+          'The impact on environment was significant. The burning of fossil fuels and the widespread use of chemicals led to air pollution, water pollution, and soil degradation. The deforestation of large areas for industrial purposes and the use of coal for heating contributed to climate change. The Industrial Revolution also led to the exploitation of natural resources and the depletion of non-renewable sources.',
+          'The impact on society was significant. The Industrial Revolution challenged traditional hierarchies and social structures. The middle class gained more influence, and new social norms emerged. The Industrial Revolution also saw the rise of nation-states and the development of new diplomatic relations. The Industrial Revolution laid the foundation for modern nation-states and international relations.',
+          'The impact on politics was profound. The Industrial Revolution challenged traditional political structures and led to the establishment of new democratic ideals. The Industrial Revolution laid the foundation for modern nation-states and international relations.'
+        ],
+        keys: ['A','B','C','D','E','F','G']
+      },
+      {
+        name: 'Đề 8: The Renaissance (continued)',
+        headings: [
+          'A. The Impact on Art',
+          'B. The Impact on Science',
+          'C. The Impact on Education',
+          'D. The Impact on Society',
+          'E. The Impact on Politics',
+          'F. The Impact on Religion',
+          'G. The Impact on Health'
+        ],
+        paragraphs: [
+          'The Renaissance continued to have profound impacts on art, science, and education. The impact on art was profound. The Renaissance saw the birth of new artistic movements, such as the Renaissance Mannerism and the development of perspective in painting. Artists began to study human anatomy and nature, leading to a newfound appreciation for the beauty of the human form and the natural world.',
+          'The impact on science was significant. The Renaissance saw the emergence of new scientific methods and discoveries. Scientists began to question traditional beliefs and seek empirical evidence. The heliocentric theory of Copernicus challenged the geocentric theory of Ptolemy, leading to a revolution in our understanding of the universe. The Renaissance also saw the development of new mathematical tools and the establishment of scientific institutions.',
+          'The impact on education was profound. The Renaissance led to the establishment of new educational institutions, particularly in Italy. Universities were built to train students in a wide range of subjects, including philosophy, medicine, and law. The focus shifted from religious to secular education. Education became more accessible to the middle class, but inequality persisted.',
+          'The impact on society was significant. The Renaissance challenged traditional hierarchies and social structures. The middle class gained more influence, and new social norms emerged. The Renaissance also saw the rise of humanism, which emphasized the importance of individualism, reason, and the study of classical texts. This led to a more open and tolerant society.',
+          'The impact on politics was profound. The Renaissance saw the emergence of new political ideas and the rise of powerful city-states. The Medici family in Florence, for example, wielded significant political power. The Renaissance also saw the rise of nation-states and the development of new diplomatic relations. The Renaissance laid the foundation for modern nation-states and international relations.',
+          'The impact on religion was mixed. While the Renaissance challenged traditional religious beliefs and practices, it also saw a renewed interest in religious texts and the establishment of new religious orders. The Renaissance laid the foundation for modern religious institutions and the development of new theological ideas.',
+          'The impact on health was significant. The Renaissance saw the emergence of new scientific discoveries and the establishment of scientific institutions. The Renaissance laid the foundation for modern religious institutions and the development of new theological ideas.'
+        ],
+        keys: ['A','B','C','D','E','F','G']
+      },
+      {
+        name: 'Đề 9: The French Revolution (continued)',
+        headings: [
+          'A. The Impact on Society',
+          'B. The Impact on Politics',
+          'C. The Impact on Education',
+          'D. The Impact on Religion',
+          'E. The Impact on Art',
+          'F. The Impact on Science',
+          'G. The Impact on Health'
+        ],
+        paragraphs: [
+          'The French Revolution continued to have profound impacts on society, politics, and education. The impact on society was profound. The traditional social hierarchy was challenged, and new social norms emerged. The middle class gained more influence, and the working class faced improved living conditions. The traditional family structure was disrupted, and new social problems arose. The revolutionary government was overthrown in 1799 by Napoleon Bonaparte, but the principles of liberty, equality, and fraternity remained influential.',
+          'The impact on politics was significant. The revolutionary government was overthrown in 1799 by Napoleon Bonaparte, but the principles of liberty, equality, and fraternity remained influential.',
+          'The impact on education was profound. The revolutionary government established new educational institutions, particularly in the cities. Schools and universities were built to promote secular education and the study of new ideas. The focus shifted from religious to secular education. Education became more accessible to the middle class, but inequality persisted.',
+          'The impact on religion was significant. The revolutionary government sought to establish a new religious order, based on the principles of liberty, equality, and fraternity. The revolutionary government was overthrown in 1799 by Napoleon Bonaparte, but the principles of liberty, equality, and fraternity remained influential.',
+          'The impact on art was profound. The revolutionary government sought to promote new artistic movements, particularly in the cities. Schools and universities were built to train artists in a new style. The focus shifted from religious to secular art. Art became more accessible to the middle class, but inequality persisted.',
+          'The impact on science was significant. The revolutionary government sought to promote new scientific discoveries and the establishment of scientific institutions. The revolutionary government was overthrown in 1799 by Napoleon Bonaparte, but the principles of liberty, equality, and fraternity remained influential.',
+          'The impact on health was mixed. While the Industrial Revolution brought about significant improvements in living standards, it also led to new health problems. The poor living conditions and unsanitary environments contributed to the spread of diseases. The introduction of new technologies and chemicals in the workplace led to occupational hazards and health issues. The Industrial Revolution also contributed to the rise of new diseases and the spread of epidemics.'
+        ],
+        keys: ['A','B','C','D','E','F','G']
+      },
+      {
+        name: 'Đề 10: The Industrial Revolution (continued)',
+        headings: [
+          'A. The Impact on Work',
+          'B. The Impact on Living Conditions',
+          'C. The Impact on Education',
+          'D. The Impact on Health',
+          'E. The Impact on Environment',
+          'F. The Impact on Society',
+          'G. The Impact on Politics'
+        ],
+        paragraphs: [
+          'The Industrial Revolution continued to have profound impacts on work, living conditions, and education. The impact on work was profound. The introduction of new technologies and machinery led to the mechanization of many industries, reducing the need for skilled labor. This resulted in a shift from artisanal to industrial production. The work itself changed, becoming more monotonous and repetitive. Workers faced long hours, low wages, and limited opportunities for advancement.',
+          'The impact on living conditions was mixed. While the Industrial Revolution brought about significant improvements in food production and transportation, many people still lived in cramped, unsanitary conditions. The rise of the middle class led to the construction of new housing, but this often came at the expense of the poor. The availability of goods increased, but prices often rose, making them less accessible to the working class.',
+          'The impact on education was significant. The Industrial Revolution led to the establishment of new educational institutions, particularly in the cities. Schools and universities were built to train workers for the new industries. The focus shifted from traditional subjects to practical skills. Education became more accessible to the middle class, but inequality persisted.',
+          'The impact on health was mixed. While the Industrial Revolution brought about significant improvements in living standards, it also led to new health problems. The poor living conditions and unsanitary environments contributed to the spread of diseases. The introduction of new technologies and chemicals in the workplace led to occupational hazards and health issues. The Industrial Revolution also contributed to the rise of new diseases and the spread of epidemics.',
+          'The impact on environment was significant. The burning of fossil fuels and the widespread use of chemicals led to air pollution, water pollution, and soil degradation. The deforestation of large areas for industrial purposes and the use of coal for heating contributed to climate change. The Industrial Revolution also led to the exploitation of natural resources and the depletion of non-renewable sources.',
+          'The impact on society was significant. The Industrial Revolution challenged traditional hierarchies and social structures. The middle class gained more influence, and new social norms emerged. The Industrial Revolution also saw the rise of nation-states and the development of new diplomatic relations. The Industrial Revolution laid the foundation for modern nation-states and international relations.',
+          'The impact on politics was profound. The Industrial Revolution challenged traditional political structures and led to the establishment of new democratic ideals. The Industrial Revolution laid the foundation for modern nation-states and international relations.'
+        ],
+        keys: ['A','B','C','D','E','F','G']
+      },
+      {
+        name: 'Đề 11: The Renaissance (continued)',
+        headings: [
+          'A. The Impact on Art',
+          'B. The Impact on Science',
+          'C. The Impact on Education',
+          'D. The Impact on Society',
+          'E. The Impact on Politics',
+          'F. The Impact on Religion',
+          'G. The Impact on Health'
+        ],
+        paragraphs: [
+          'The Renaissance continued to have profound impacts on art, science, and education. The impact on art was profound. The Renaissance saw the birth of new artistic movements, such as the Renaissance Mannerism and the development of perspective in painting. Artists began to study human anatomy and nature, leading to a newfound appreciation for the beauty of the human form and the natural world.',
+          'The impact on science was significant. The Renaissance saw the emergence of new scientific methods and discoveries. Scientists began to question traditional beliefs and seek empirical evidence. The heliocentric theory of Copernicus challenged the geocentric theory of Ptolemy, leading to a revolution in our understanding of the universe. The Renaissance also saw the development of new mathematical tools and the establishment of scientific institutions.',
+          'The impact on education was profound. The Renaissance led to the establishment of new educational institutions, particularly in Italy. Universities were built to train students in a wide range of subjects, including philosophy, medicine, and law. The focus shifted from religious to secular education. Education became more accessible to the middle class, but inequality persisted.',
+          'The impact on society was significant. The Renaissance challenged traditional hierarchies and social structures. The middle class gained more influence, and new social norms emerged. The Renaissance also saw the rise of humanism, which emphasized the importance of individualism, reason, and the study of classical texts. This led to a more open and tolerant society.',
+          'The impact on politics was profound. The Renaissance saw the emergence of new political ideas and the rise of powerful city-states. The Medici family in Florence, for example, wielded significant political power. The Renaissance also saw the rise of nation-states and the development of new diplomatic relations. The Renaissance laid the foundation for modern nation-states and international relations.',
+          'The impact on religion was mixed. While the Renaissance challenged traditional religious beliefs and practices, it also saw a renewed interest in religious texts and the establishment of new religious orders. The Renaissance laid the foundation for modern religious institutions and the development of new theological ideas.',
+          'The impact on health was significant. The Renaissance saw the emergence of new scientific discoveries and the establishment of scientific institutions. The Renaissance laid the foundation for modern religious institutions and the development of new theological ideas.'
+        ],
+        keys: ['A','B','C','D','E','F','G']
+      },
+      {
+        name: 'Đề 12: The French Revolution (continued)',
+        headings: [
+          'A. The Impact on Society',
+          'B. The Impact on Politics',
+          'C. The Impact on Education',
+          'D. The Impact on Religion',
+          'E. The Impact on Art',
+          'F. The Impact on Science',
+          'G. The Impact on Health'
+        ],
+        paragraphs: [
+          'The French Revolution continued to have profound impacts on society, politics, and education. The impact on society was profound. The traditional social hierarchy was challenged, and new social norms emerged. The middle class gained more influence, and the working class faced improved living conditions. The traditional family structure was disrupted, and new social problems arose. The revolutionary government was overthrown in 1799 by Napoleon Bonaparte, but the principles of liberty, equality, and fraternity remained influential.',
+          'The impact on politics was significant. The revolutionary government was overthrown in 1799 by Napoleon Bonaparte, but the principles of liberty, equality, and fraternity remained influential.',
+          'The impact on education was profound. The revolutionary government established new educational institutions, particularly in the cities. Schools and universities were built to promote secular education and the study of new ideas. The focus shifted from religious to secular education. Education became more accessible to the middle class, but inequality persisted.',
+          'The impact on religion was significant. The revolutionary government sought to establish a new religious order, based on the principles of liberty, equality, and fraternity. The revolutionary government was overthrown in 1799 by Napoleon Bonaparte, but the principles of liberty, equality, and fraternity remained influential.',
+          'The impact on art was profound. The revolutionary government sought to promote new artistic movements, particularly in the cities. Schools and universities were built to train artists in a new style. The focus shifted from religious to secular art. Art became more accessible to the middle class, but inequality persisted.',
+          'The impact on science was significant. The revolutionary government sought to promote new scientific discoveries and the establishment of scientific institutions. The revolutionary government was overthrown in 1799 by Napoleon Bonaparte, but the principles of liberty, equality, and fraternity remained influential.',
+          'The impact on health was mixed. While the Industrial Revolution brought about significant improvements in living standards, it also led to new health problems. The poor living conditions and unsanitary environments contributed to the spread of diseases. The introduction of new technologies and chemicals in the workplace led to occupational hazards and health issues. The Industrial Revolution also contributed to the rise of new diseases and the spread of epidemics.'
+        ],
+        keys: ['A','B','C','D','E','F','G']
+      },
+      {
+        name: 'Đề 13: The Industrial Revolution (continued)',
+        headings: [
+          'A. The Impact on Work',
+          'B. The Impact on Living Conditions',
+          'C. The Impact on Education',
+          'D. The Impact on Health',
+          'E. The Impact on Environment',
+          'F. The Impact on Society',
+          'G. The Impact on Politics'
+        ],
+        paragraphs: [
+          'The Industrial Revolution continued to have profound impacts on work, living conditions, and education. The impact on work was profound. The introduction of new technologies and machinery led to the mechanization of many industries, reducing the need for skilled labor. This resulted in a shift from artisanal to industrial production. The work itself changed, becoming more monotonous and repetitive. Workers faced long hours, low wages, and limited opportunities for advancement.',
+          'The impact on living conditions was mixed. While the Industrial Revolution brought about significant improvements in food production and transportation, many people still lived in cramped, unsanitary conditions. The rise of the middle class led to the construction of new housing, but this often came at the expense of the poor. The availability of goods increased, but prices often rose, making them less accessible to the working class.',
+          'The impact on education was significant. The Industrial Revolution led to the establishment of new educational institutions, particularly in the cities. Schools and universities were built to train workers for the new industries. The focus shifted from traditional subjects to practical skills. Education became more accessible to the middle class, but inequality persisted.',
+          'The impact on health was mixed. While the Industrial Revolution brought about significant improvements in living standards, it also led to new health problems. The poor living conditions and unsanitary environments contributed to the spread of diseases. The introduction of new technologies and chemicals in the workplace led to occupational hazards and health issues. The Industrial Revolution also contributed to the rise of new diseases and the spread of epidemics.',
+          'The impact on environment was significant. The burning of fossil fuels and the widespread use of chemicals led to air pollution, water pollution, and soil degradation. The deforestation of large areas for industrial purposes and the use of coal for heating contributed to climate change. The Industrial Revolution also led to the exploitation of natural resources and the depletion of non-renewable sources.',
+          'The impact on society was significant. The Industrial Revolution challenged traditional hierarchies and social structures. The middle class gained more influence, and new social norms emerged. The Industrial Revolution also saw the rise of nation-states and the development of new diplomatic relations. The Industrial Revolution laid the foundation for modern nation-states and international relations.',
+          'The impact on politics was profound. The Industrial Revolution challenged traditional political structures and led to the establishment of new democratic ideals. The Industrial Revolution laid the foundation for modern nation-states and international relations.'
+        ],
+        keys: ['A','B','C','D','E','F','G']
+      },
+      {
+        name: 'Đề 14: The Renaissance (continued)',
+        headings: [
+          'A. The Impact on Art',
+          'B. The Impact on Science',
+          'C. The Impact on Education',
+          'D. The Impact on Society',
+          'E. The Impact on Politics',
+          'F. The Impact on Religion',
+          'G. The Impact on Health'
+        ],
+        paragraphs: [
+          'The Renaissance continued to have profound impacts on art, science, and education. The impact on art was profound. The Renaissance saw the birth of new artistic movements, such as the Renaissance Mannerism and the development of perspective in painting. Artists began to study human anatomy and nature, leading to a newfound appreciation for the beauty of the human form and the natural world.',
+          'The impact on science was significant. The Renaissance saw the emergence of new scientific methods and discoveries. Scientists began to question traditional beliefs and seek empirical evidence. The heliocentric theory of Copernicus challenged the geocentric theory of Ptolemy, leading to a revolution in our understanding of the universe. The Renaissance also saw the development of new mathematical tools and the establishment of scientific institutions.',
+          'The impact on education was profound. The Renaissance led to the establishment of new educational institutions, particularly in Italy. Universities were built to train students in a wide range of subjects, including philosophy, medicine, and law. The focus shifted from religious to secular education. Education became more accessible to the middle class, but inequality persisted.',
+          'The impact on society was significant. The Renaissance challenged traditional hierarchies and social structures. The middle class gained more influence, and new social norms emerged. The Renaissance also saw the rise of humanism, which emphasized the importance of individualism, reason, and the study of classical texts. This led to a more open and tolerant society.',
+          'The impact on politics was profound. The Renaissance saw the emergence of new political ideas and the rise of powerful city-states. The Medici family in Florence, for example, wielded significant political power. The Renaissance also saw the rise of nation-states and the development of new diplomatic relations. The Renaissance laid the foundation for modern nation-states and international relations.',
+          'The impact on religion was mixed. While the Renaissance challenged traditional religious beliefs and practices, it also saw a renewed interest in religious texts and the establishment of new religious orders. The Renaissance laid the foundation for modern religious institutions and the development of new theological ideas.',
+          'The impact on health was significant. The Renaissance saw the emergence of new scientific discoveries and the establishment of scientific institutions. The Renaissance laid the foundation for modern religious institutions and the development of new theological ideas.'
+        ],
+        keys: ['A','B','C','D','E','F','G']
+      },
+      {
+        name: 'Đề 15: The French Revolution (continued)',
+        headings: [
+          'A. The Impact on Society',
+          'B. The Impact on Politics',
+          'C. The Impact on Education',
+          'D. The Impact on Religion',
+          'E. The Impact on Art',
+          'F. The Impact on Science',
+          'G. The Impact on Health'
+        ],
+        paragraphs: [
+          'The French Revolution continued to have profound impacts on society, politics, and education. The impact on society was profound. The traditional social hierarchy was challenged, and new social norms emerged. The middle class gained more influence, and the working class faced improved living conditions. The traditional family structure was disrupted, and new social problems arose. The revolutionary government was overthrown in 1799 by Napoleon Bonaparte, but the principles of liberty, equality, and fraternity remained influential.',
+          'The impact on politics was significant. The revolutionary government was overthrown in 1799 by Napoleon Bonaparte, but the principles of liberty, equality, and fraternity remained influential.',
+          'The impact on education was profound. The revolutionary government established new educational institutions, particularly in the cities. Schools and universities were built to promote secular education and the study of new ideas. The focus shifted from religious to secular education. Education became more accessible to the middle class, but inequality persisted.',
+          'The impact on religion was significant. The revolutionary government sought to establish a new religious order, based on the principles of liberty, equality, and fraternity. The revolutionary government was overthrown in 1799 by Napoleon Bonaparte, but the principles of liberty, equality, and fraternity remained influential.',
+          'The impact on art was profound. The revolutionary government sought to promote new artistic movements, particularly in the cities. Schools and universities were built to train artists in a new style. The focus shifted from religious to secular art. Art became more accessible to the middle class, but inequality persisted.',
+          'The impact on science was significant. The revolutionary government sought to promote new scientific discoveries and the establishment of scientific institutions. The revolutionary government was overthrown in 1799 by Napoleon Bonaparte, but the principles of liberty, equality, and fraternity remained influential.',
+          'The impact on health was mixed. While the Industrial Revolution brought about significant improvements in living standards, it also led to new health problems. The poor living conditions and unsanitary environments contributed to the spread of diseases. The introduction of new technologies and chemicals in the workplace led to occupational hazards and health issues. The Industrial Revolution also contributed to the rise of new diseases and the spread of epidemics.'
+        ],
+        keys: ['A','B','C','D','E','F','G']
+      },
+      {
+        name: 'Đề 16: The Industrial Revolution (continued)',
+        headings: [
+          'A. The Impact on Work',
+          'B. The Impact on Living Conditions',
+          'C. The Impact on Education',
+          'D. The Impact on Health',
+          'E. The Impact on Environment',
+          'F. The Impact on Society',
+          'G. The Impact on Politics'
+        ],
+        paragraphs: [
+          'The Industrial Revolution continued to have profound impacts on work, living conditions, and education. The impact on work was profound. The introduction of new technologies and machinery led to the mechanization of many industries, reducing the need for skilled labor. This resulted in a shift from artisanal to industrial production. The work itself changed, becoming more monotonous and repetitive. Workers faced long hours, low wages, and limited opportunities for advancement.',
+          'The impact on living conditions was mixed. While the Industrial Revolution brought about significant improvements in food production and transportation, many people still lived in cramped, unsanitary conditions. The rise of the middle class led to the construction of new housing, but this often came at the expense of the poor. The availability of goods increased, but prices often rose, making them less accessible to the working class.',
+          'The impact on education was significant. The Industrial Revolution led to the establishment of new educational institutions, particularly in the cities. Schools and universities were built to train workers for the new industries. The focus shifted from traditional subjects to practical skills. Education became more accessible to the middle class, but inequality persisted.',
+          'The impact on health was mixed. While the Industrial Revolution brought about significant improvements in living standards, it also led to new health problems. The poor living conditions and unsanitary environments contributed to the spread of diseases. The introduction of new technologies and chemicals in the workplace led to occupational hazards and health issues. The Industrial Revolution also contributed to the rise of new diseases and the spread of epidemics.',
+          'The impact on environment was significant. The burning of fossil fuels and the widespread use of chemicals led to air pollution, water pollution, and soil degradation. The deforestation of large areas for industrial purposes and the use of coal for heating contributed to climate change. The Industrial Revolution also led to the exploitation of natural resources and the depletion of non-renewable sources.',
+          'The impact on society was significant. The Industrial Revolution challenged traditional hierarchies and social structures. The middle class gained more influence, and new social norms emerged. The Industrial Revolution also saw the rise of nation-states and the development of new diplomatic relations. The Industrial Revolution laid the foundation for modern nation-states and international relations.',
+          'The impact on politics was profound. The Industrial Revolution challenged traditional political structures and led to the establishment of new democratic ideals. The Industrial Revolution laid the foundation for modern nation-states and international relations.'
+        ],
+        keys: ['A','B','C','D','E','F','G']
+      },
+      {
+        name: 'Đề 17: The Renaissance (continued)',
+        headings: [
+          'A. The Impact on Art',
+          'B. The Impact on Science',
+          'C. The Impact on Education',
+          'D. The Impact on Society',
+          'E. The Impact on Politics',
+          'F. The Impact on Religion',
+          'G. The Impact on Health'
+        ],
+        paragraphs: [
+          'The Renaissance continued to have profound impacts on art, science, and education. The impact on art was profound. The Renaissance saw the birth of new artistic movements, such as the Renaissance Mannerism and the development of perspective in painting. Artists began to study human anatomy and nature, leading to a newfound appreciation for the beauty of the human form and the natural world.',
+          'The impact on science was significant. The Renaissance saw the emergence of new scientific methods and discoveries. Scientists began to question traditional beliefs and seek empirical evidence. The heliocentric theory of Copernicus challenged the geocentric theory of Ptolemy, leading to a revolution in our understanding of the universe. The Renaissance also saw the development of new mathematical tools and the establishment of scientific institutions.',
+          'The impact on education was profound. The Renaissance led to the establishment of new educational institutions, particularly in Italy. Universities were built to train students in a wide range of subjects, including philosophy, medicine, and law. The focus shifted from religious to secular education. Education became more accessible to the middle class, but inequality persisted.',
+          'The impact on society was significant. The Renaissance challenged traditional hierarchies and social structures. The middle class gained more influence, and new social norms emerged. The Renaissance also saw the rise of humanism, which emphasized the importance of individualism, reason, and the study of classical texts. This led to a more open and tolerant society.',
+          'The impact on politics was profound. The Renaissance saw the emergence of new political ideas and the rise of powerful city-states. The Medici family in Florence, for example, wielded significant political power. The Renaissance also saw the rise of nation-states and the development of new diplomatic relations. The Renaissance laid the foundation for modern nation-states and international relations.',
+          'The impact on religion was mixed. While the Renaissance challenged traditional religious beliefs and practices, it also saw a renewed interest in religious texts and the establishment of new religious orders. The Renaissance laid the foundation for modern religious institutions and the development of new theological ideas.',
+          'The impact on health was significant. The Renaissance saw the emergence of new scientific discoveries and the establishment of scientific institutions. The Renaissance laid the foundation for modern religious institutions and the development of new theological ideas.'
+        ],
+        keys: ['A','B','C','D','E','F','G']
+      },
+      {
+        name: 'Đề 18: CURRENCY',
+        headings: [
+          '1. An unsatisfactory',
+          '2. A soft currency is',
+          '3. An old currency used today',
+          '4. The creation',
+          '5. Arise',
+          '6. The politics',
+          '7. International'
+        ],
+        paragraphs: [],
+        keys: []
+      },
+      {
+        name: 'Đề 19: CAVING',
+        headings: [
+          '1. The growth of caving',
+          '2. The wide',
+          '3. man becomes',
+          '4. What to take',
+          '5. Staying safe',
+          '6. What to do',
+          '7. The joy of'
+        ],
+        paragraphs: [],
+        keys: []
+      }
+    ];
+
+    let currentTopic = 0;
+    function renderTopicDropdown() {
+      const dropdown = document.getElementById('topicDropdown');
+      dropdown.innerHTML = '';
+      for (let i = 0; i < topics.length; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = topics[i].name;
+        dropdown.appendChild(opt);
+      }
+      dropdown.value = currentTopic;
+      dropdown.onchange = function() {
+        currentTopic = parseInt(this.value);
+        renderTopicContent();
+      };
+    }
+    function renderTopicContent() {
+      const topic = topics[currentTopic];
+      let html = '';
+      html += `<div style='font-weight:600;margin-bottom:8px;'>List of headings:</div>`;
+      html += `<ol type='A' style='margin-left:18px;margin-bottom:18px;'>`;
+      for (let i = 0; i < topic.headings.length; i++) {
+        html += `<li>${topic.headings[i].replace(/^[A-Z]\. /, '')}</li>`;
+      }
+      html += `</ol>`;
+      html += `<form id='topicForm'><div style='margin-bottom:18px;'>`;
+      for (let i = 0; i < topic.paragraphs.length; i++) {
+        html += `<div style='margin-bottom:10px;'><b>${i+1}.</b> ${topic.paragraphs[i]}
+          <select class='answer-input' id='topicAns${i}' style='margin-left:10px;width:320px;'>
+            <option value=''>--</option>`;
+        for (let j = 0; j < topic.headings.length; j++) {
+          const letter = String.fromCharCode(65+j);
+          html += `<option value='${letter}'>${topic.headings[j]}</option>`;
+        }
+        html += `</select> <span class='answer-key' id='topicKey${i}'></span></div>`;
+      }
+      html += `</div><button type='button' class='submit-btn' onclick='checkTopic()'>Submit</button></form>`;
+      document.getElementById('topicContent').innerHTML = html;
+    }
+    function checkTopic() {
+      const topic = topics[currentTopic];
+      for (let i = 0; i < topic.keys.length; i++) {
+        const inp = document.getElementById('topicAns'+i);
+        const key = document.getElementById('topicKey'+i);
+        inp.classList.remove('correct','wrong');
+        key.textContent = '';
+        if (inp.value === topic.keys[i]) {
+          inp.classList.add('correct');
+        } else {
+          inp.classList.add('wrong');
+          key.textContent = 'Đáp án đúng: ' + topic.keys[i];
+        }
+      }
+    }
+    // Initial render
+    renderTopicDropdown();
+    renderTopicContent();
+  </script>
+</body>
+</html> 

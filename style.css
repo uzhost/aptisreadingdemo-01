@@ -1,0 +1,212 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 800px;
+  margin: auto;
+  padding: 0 8px 32px 8px;
+  background: linear-gradient(120deg, #f0f4f8 60%, #eaf6fb 100%);
+  color: #222;
+}
+
+.header-bar {
+  width: 100%;
+  background: linear-gradient(90deg, #1976d2 60%, #1565c0 100%);
+  color: #fff;
+  border-radius: 0 0 22px 22px;
+  box-shadow: 0 6px 24px rgba(33, 150, 243, 0.18), 0 1.5px 0 #1565c0;
+  padding: 38px 0 32px 0;
+  margin-bottom: 36px;
+  text-align: center;
+  letter-spacing: 1px;
+  border-bottom: 4px solid #1565c0;
+}
+
+h1 {
+  color: #111 !important;
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-shadow: 0 4px 16px rgba(25, 118, 210, 0.18), 0 1.5px 0 #1565c0;
+  letter-spacing: 2px;
+  filter: none;
+  opacity: 1;
+}
+
+h2 {
+  color: #3498db;
+  margin-bottom: 14px;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 4px;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.test-box {
+  border: 1.5px solid #e0e6ed;
+  border-radius: 16px;
+  padding: 24px 18px 18px 18px;
+  margin-bottom: 32px;
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(52, 152, 219, 0.08);
+  transition: box-shadow 0.2s;
+}
+.test-box:hover {
+  box-shadow: 0 8px 32px rgba(52, 152, 219, 0.16);
+}
+
+.test-box div {
+  line-height: 1.8;
+  font-size: 1.08rem;
+  margin-bottom: 10px;
+  color: #2d3a4b;
+}
+
+select {
+  margin: 0 4px;
+  padding: 6px 16px 6px 10px;
+  border-radius: 8px;
+  border: 1.5px solid #bfc9d1;
+  font-size: 1.08rem;
+  background: #f7fafd;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.04);
+  transition: border-color 0.2s, background 0.2s;
+  min-width: 70px;
+  cursor: pointer;
+}
+select:focus {
+  border-color: #3498db;
+  background: #eaf6fb;
+  outline: none;
+}
+select:disabled {
+  background: #ececec;
+  color: #888;
+  cursor: not-allowed;
+}
+option {
+  font-size: 1.05rem;
+}
+
+button {
+  display: inline-block;
+  margin: 12px 4px 0 4px;
+  padding: 9px 28px;
+  background: linear-gradient(90deg, #3498db 60%, #6dd5fa 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.08rem;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.10);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+button:hover {
+  background: linear-gradient(90deg, #2980b9 60%, #6dd5fa 100%);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 18px rgba(52, 152, 219, 0.18);
+}
+button:active {
+  transform: scale(0.98);
+}
+
+.correct {
+  background: #d5f5e3 !important;
+  border-color: #27ae60 !important;
+  color: #27ae60 !important;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px #b8e994;
+}
+
+.wrong {
+  background: #f9e0e0 !important;
+  border-color: #e74c3c !important;
+  color: #e74c3c !important;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px #f8c6c6;
+}
+
+.main-nav {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 14px;
+  padding: 10px 0 10px 0;
+  margin-bottom: 10px;
+  background: rgba(255,255,255,0.10);
+  border-radius: 999px;
+  box-shadow: 0 2px 12px rgba(102,126,234,0.08);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.main-nav::-webkit-scrollbar {
+  display: none;
+}
+.nav-link {
+  display: inline-block;
+  padding: 10px 28px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.08rem;
+  text-decoration: none;
+  border: none;
+  box-shadow: 0 2px 8px rgba(102,126,234,0.08);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
+  position: relative;
+  margin: 0 0 0 0;
+  white-space: nowrap;
+}
+.nav-link:hover, .nav-link.active {
+  background: linear-gradient(90deg, #4fc3f7 60%, #667eea 100%);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(52,152,219,0.18);
+  transform: translateY(-2px) scale(1.04);
+  text-shadow: 0 2px 8px rgba(25,118,210,0.10);
+}
+
+/* All unified styles from all HTML files go here, merged and deduplicated. */
+
+@media (max-width: 600px) {
+  body {
+    padding: 0 2px 18px 2px;
+  }
+  .header-bar {
+    padding: 18px 0 16px 0;
+    border-radius: 0 0 12px 12px;
+    margin-bottom: 22px;
+  }
+  h1 {
+    font-size: 1.3rem;
+  }
+  h2 {
+    font-size: 1.08rem;
+  }
+  .test-box {
+    padding: 12px 4px 10px 4px;
+    border-radius: 8px;
+  }
+  .test-box div {
+    font-size: 0.98rem;
+  }
+  select {
+    font-size: 0.98rem;
+    padding: 5px 8px;
+    border-radius: 6px;
+  }
+  button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px 0;
+    margin: 10px 0 0 0;
+  }
+  .main-nav {
+    gap: 8px;
+    padding: 7px 0 7px 0;
+    border-radius: 16px;
+  }
+  .nav-link {
+    font-size: 0.98rem;
+    padding: 8px 16px;
+  }
+}
