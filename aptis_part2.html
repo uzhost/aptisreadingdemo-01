@@ -336,7 +336,7 @@
           <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
           <path d="M7 10h6M11 7l3 3-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <span>Quay lại trang chủ</span>
+        <span>Home page</span>
       </a>
       <h1 class="main-title">APTIS Reading Part 2</h1>
     </div>
@@ -345,7 +345,7 @@
     <div class="left-col">
       <div class="title" id="main-title"></div>
       <div id="drag-list"></div>
-      <div style="margin-bottom:10px;">(Kéo các câu bên trên vào đúng thứ tự bên dưới)</div>
+      <div style="margin-bottom:10px;">(Drag the sentences above into the correct order below.)</div>
       <div id="drop-area" class="drop-area"></div>
       <div class="nav-row" style="display:flex;justify-content:center;align-items:center;margin-top:18px;gap:12px;">
         <button class="nav-btn" onclick="prevTest()">← Previous</button>
@@ -353,12 +353,12 @@
         <button class="nav-btn" onclick="nextTest()">Next →</button>
       </div>
       <div style="display:flex;justify-content:center;margin-top:16px;">
-        <button class="submit-btn" onclick="checkAnswers()">Kiểm tra kết quả</button>
+        <button class="submit-btn" onclick="checkAnswers()">Check the results</button>
       </div>
     </div>
   </div>
   <script>
-    // Dữ liệu 30 bài (chỉ lấy phần câu trả lời đúng, đảo lộn sẽ random mỗi lần)
+    // Contains 30 tests
     const tests = [
       {
         title: "To successfully finish the assignment, follow these instructions:",
@@ -661,7 +661,7 @@
         ]
       }
     ];
-    // Thêm các bài còn lại (do giới hạn ký tự, bạn có thể copy tiếp phần answer từ dữ liệu bạn gửi vào đây)
+    // Add the remaining posts (due to character limit, you can copy the answer part from the data you submitted here)
 
     // --- END DATA ---
 
@@ -678,13 +678,13 @@
     function renderTest(idx) {
       const test = tests[idx];
       document.getElementById('main-title').textContent = test.title;
-      document.getElementById('current-idx').textContent = `Bài ${idx + 1}/${tests.length}`;
-      // Xóa cũ
+      document.getElementById('current-idx').textContent = `TEST ${idx + 1}/${tests.length}`;
+      // Delete old
       const dropArea = document.getElementById('drop-area');
       dropArea.innerHTML = '';
       const dragList = document.getElementById('drag-list');
       dragList.innerHTML = '';
-      // Tạo drag list (random)
+      // Create drag list (random)
       const shuffled = shuffle(test.answer);
       shuffled.forEach((text, i) => {
         const item = document.createElement('div');
@@ -699,7 +699,7 @@
         item.ondragend = e => item.classList.remove('dragging');
         dragList.appendChild(item);
       });
-      // Tạo drop area
+      // Create drop area
       for (let i = 0; i < test.answer.length; i++) {
         const slot = document.createElement('div');
         slot.className = 'drop-slot';
@@ -738,7 +738,7 @@
             allCorrect = false;
             const ans = document.createElement('div');
             ans.className = 'answer-key';
-            ans.innerHTML = 'Đáp án đúng: <b>' + test.answer[i] + '</b>';
+            ans.innerHTML = 'Correct answer: <b>' + test.answer[i] + '</b>';
             slot.appendChild(ans);
           }
         } else {
@@ -746,11 +746,11 @@
           allCorrect = false;
           const ans = document.createElement('div');
           ans.className = 'answer-key';
-          ans.innerHTML = 'Đáp án đúng: <b>' + test.answer[i] + '</b>';
+          ans.innerHTML = 'Correct answer: <b>' + test.answer[i] + '</b>';
           slot.appendChild(ans);
         }
       });
-      if (allCorrect) alert('Chúc mừng bạn đã sắp xếp đúng!');
+      if (allCorrect) alert('Congratulations! You have answered correctly.!');
     }
 
     function nextTest() {
@@ -766,7 +766,7 @@
       }
     }
 
-    // Khởi tạo bài đầu tiên
+    // Create first post
     renderTest(current);
   </script>
 </body>
