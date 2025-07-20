@@ -402,7 +402,7 @@ function App() {
 
   return (
     <div style={{ maxWidth: 800, margin: "0 auto", fontFamily: "sans-serif", padding: 24 }}>
-      <h1>Ôn tập Part 1</h1>
+      <h1>Part 1</h1>
       {tests.map((test, testIdx) => {
         let ansIdx = 0;
         return (
@@ -412,7 +412,7 @@ function App() {
               <div key={qIdx} style={{ marginBottom: 12 }}>
                 <div>
                   {(() => {
-                    // Tách câu hỏi thành các phần để chèn select vào đúng vị trí
+                    // Split the question into parts to insert select in the right place
                     const parts = q.text.split(/\([^)]*\)/g);
                     const matches = [...q.text.matchAll(/\(([^)]*)\)/g)];
                     let content = [];
@@ -435,7 +435,7 @@ function App() {
                               borderColor: isSubmitted ? (isCorrect ? "#2ecc40" : "#e74c3c") : undefined,
                             }}
                           >
-                            <option value="">--Chọn--</option>
+                            <option value="">--choose--</option>
                             {choices.map((c) => (
                               <option key={c} value={c}>{c}</option>
                             ))}
@@ -447,13 +447,13 @@ function App() {
                     return content;
                   })()}
                 </div>
-                {/* Nếu đã submit và sai thì hiện đáp án đúng */}
+                {/* If submitted and wrong, show correct answer */}
                 {submitted[testIdx] && q.answers.map((ans, i) => {
                   const idx = ansIdx - q.answers.length + i;
                   if (!results[testIdx][idx]) {
                     return (
                       <div key={"ans" + i} style={{ color: "#e74c3c", fontSize: 13 }}>
-                        Đáp án đúng: <b>{ans}</b>
+                        Correct answer: <b>{ans}</b>
                       </div>
                     );
                   }
