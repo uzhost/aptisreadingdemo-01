@@ -250,7 +250,7 @@
   <div class="header-bar">
     <nav class="main-nav">
       <a href="index.html" class="nav-link">Part 1</a>
-      <a href="aptis_part2.html" class="nav-link">Part 2</a>
+      <a href="part2.html" class="nav-link">Part 2</a>
       <a href="part3.html" class="nav-link">Part 3</a>
       <a href="part4.html" class="nav-link">Part 4</a>
     </nav>
@@ -260,14 +260,14 @@
           <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
           <path d="M13 10H7M9 7l-3 3 3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <span>Quay lại trang chủ</span>
+        <span>Home page</span>
       </a>
       <h1 class="main-title">APTIS Reading Part 3</h1>
     </div>
   </div>
   <div class="test-box">
     <div class="set-dropdown-bar">
-      <span class="set-dropdown-label">Chọn bài:</span>
+      <span class="set-dropdown-label">Select the test:</span>
       <select class="set-dropdown-select" id="setDropdown"></select>
     </div>
     <div id="mainContent"></div>
@@ -1131,7 +1131,7 @@ work or study.`},
       for (let i = 0; i < sets.length; i++) {
         const opt = document.createElement('option');
         opt.value = i;
-        opt.textContent = 'Bài ' + (i+1);
+        opt.textContent = 'TEST ' + (i+1);
         dropdown.appendChild(opt);
       }
       dropdown.value = currentSet;
@@ -1149,7 +1149,7 @@ work or study.`},
       }
       html += '<div class="questions">';
       for (let i = 0; i < set.questions.length; i++) {
-        html += `<div class="question-row">${set.questions[i]} <select class="answer-input" id="ans${i}"><option value="">--Chọn--</option>`;
+        html += `<div class="question-row">${set.questions[i]} <select class="answer-input" id="ans${i}"><option value="">--select--</option>`;
         for (const opt of set.options) html += `<option value="${opt}">${opt}</option>`;
         html += `</select> <span class="answer-key" id="key${i}"></span></div>`;
       }
@@ -1168,7 +1168,7 @@ work or study.`},
           inp.classList.add('correct');
         } else {
           inp.classList.add('wrong');
-          key.textContent = 'Đáp án đúng: ' + set.keys[i];
+          key.textContent = 'Correct answer: ' + set.keys[i];
         }
       }
     }
