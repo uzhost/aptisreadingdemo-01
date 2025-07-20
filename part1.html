@@ -632,7 +632,7 @@
           });
           html += `</div>`;
         });
-        html += `<button onclick="submitTest(${testIdx})">Kiểm tra kết quả</button></div>`;
+        html += `<button onclick="submitTest(${testIdx})">Check the results</button></div>`;
       });
 
       container.innerHTML = html;
@@ -659,7 +659,7 @@
                 ansDiv.style.color = "#e74c3c";
                 ansDiv.style.fontSize = "13px";
                 ansDiv.style.marginTop = "5px";
-                ansDiv.innerHTML = `Correct answers: <b>${ans}</b>`;
+                ansDiv.innerHTML = `Correct answer: <b>${ans}</b>`;
                 sel.parentNode.appendChild(ansDiv);
               }
             }
