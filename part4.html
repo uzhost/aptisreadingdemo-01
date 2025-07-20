@@ -263,14 +263,14 @@
           <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
           <path d="M13 10H7M9 7l-3 3 3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <span>Quay lại trang chủ</span>
+        <span>Home page</span>
       </a>
       <h1 class="main-title">APTIS Reading Part 4</h1>
     </div>
   </div>
   <div class="test-box">
     <div class="set-dropdown-bar">
-      <span class="set-dropdown-label">Chọn đề:</span>
+      <span class="set-dropdown-label">Choose the test:</span>
       <select class="set-dropdown-select" id="topicDropdown"></select>
     </div>
     <div id="topicContent"></div>
@@ -279,7 +279,7 @@
     // All topics data
     const topics = [
       {
-        name: 'Đề 1: CHILDREN & EXERCISE',
+        name: 'Test 1: CHILDREN & EXERCISE',
         headings: [
           'A. Factors Contributing to Inactivity',
           'B. A Design for Exercise and for Study',
@@ -302,7 +302,7 @@
         keys: ['A','H','C','D','E','B','G']
       },
       {
-        name: 'Đề 2: Frozen Antarctica',
+        name: 'Test 2: Frozen Antarctica',
         headings: [
           'A. Where is the end of the earth?',
           'B. Less effort needed',
@@ -324,7 +324,7 @@
         keys: ['G','E','A','D','C','B','F']
       },
       {
-        name: 'Đề 3: The Golden Age of Tulip Trade',
+        name: 'Test 3: The Golden Age of Tulip Trade',
         headings: [
           'A. The Dutch Golden Age',
           'B. The Tulip Mania',
@@ -346,7 +346,7 @@
         keys: ['B','A','C','D','E','F','G']
       },
       {
-        name: 'Đề 4: The Industrial Revolution',
+        name: 'Test 4: The Industrial Revolution',
         headings: [
           'A. The Origins',
           'B. The Impact on Society',
@@ -368,7 +368,7 @@
         keys: ['A','B','C','D','E','F','G']
       },
       {
-        name: 'Đề 5: The Renaissance',
+        name: 'Test 5: The Renaissance',
         headings: [
           'A. The Origins',
           'B. The Impact on Art',
@@ -390,7 +390,7 @@
         keys: ['A','B','C','D','E','F','G']
       },
       {
-        name: 'Đề 6: The French Revolution',
+        name: 'Test 6: The French Revolution',
         headings: [
           'A. The Origins',
           'B. The Impact on Society',
@@ -412,7 +412,7 @@
         keys: ['A','B','C','D','E','F','G']
       },
       {
-        name: 'Đề 7: The Industrial Revolution (continued)',
+        name: 'Test 7: The Industrial Revolution (continued)',
         headings: [
           'A. The Impact on Work',
           'B. The Impact on Living Conditions',
@@ -434,7 +434,7 @@
         keys: ['A','B','C','D','E','F','G']
       },
       {
-        name: 'Đề 8: The Renaissance (continued)',
+        name: 'Test 8: The Renaissance (continued)',
         headings: [
           'A. The Impact on Art',
           'B. The Impact on Science',
@@ -456,7 +456,7 @@
         keys: ['A','B','C','D','E','F','G']
       },
       {
-        name: 'Đề 9: The French Revolution (continued)',
+        name: 'Test 9: The French Revolution (continued)',
         headings: [
           'A. The Impact on Society',
           'B. The Impact on Politics',
@@ -478,7 +478,7 @@
         keys: ['A','B','C','D','E','F','G']
       },
       {
-        name: 'Đề 10: The Industrial Revolution (continued)',
+        name: 'Test 10: The Industrial Revolution (continued)',
         headings: [
           'A. The Impact on Work',
           'B. The Impact on Living Conditions',
@@ -500,7 +500,7 @@
         keys: ['A','B','C','D','E','F','G']
       },
       {
-        name: 'Đề 11: The Renaissance (continued)',
+        name: 'Test 11: The Renaissance (continued)',
         headings: [
           'A. The Impact on Art',
           'B. The Impact on Science',
@@ -522,7 +522,7 @@
         keys: ['A','B','C','D','E','F','G']
       },
       {
-        name: 'Đề 12: The French Revolution (continued)',
+        name: 'Test 12: The French Revolution (continued)',
         headings: [
           'A. The Impact on Society',
           'B. The Impact on Politics',
@@ -544,7 +544,7 @@
         keys: ['A','B','C','D','E','F','G']
       },
       {
-        name: 'Đề 13: The Industrial Revolution (continued)',
+        name: 'Test 13: The Industrial Revolution (continued)',
         headings: [
           'A. The Impact on Work',
           'B. The Impact on Living Conditions',
@@ -566,7 +566,7 @@
         keys: ['A','B','C','D','E','F','G']
       },
       {
-        name: 'Đề 14: The Renaissance (continued)',
+        name: 'Test 14: The Renaissance (continued)',
         headings: [
           'A. The Impact on Art',
           'B. The Impact on Science',
@@ -588,7 +588,7 @@
         keys: ['A','B','C','D','E','F','G']
       },
       {
-        name: 'Đề 15: The French Revolution (continued)',
+        name: 'Test 15: The French Revolution (continued)',
         headings: [
           'A. The Impact on Society',
           'B. The Impact on Politics',
@@ -610,7 +610,7 @@
         keys: ['A','B','C','D','E','F','G']
       },
       {
-        name: 'Đề 16: The Industrial Revolution (continued)',
+        name: 'Test 16: The Industrial Revolution (continued)',
         headings: [
           'A. The Impact on Work',
           'B. The Impact on Living Conditions',
@@ -632,7 +632,7 @@
         keys: ['A','B','C','D','E','F','G']
       },
       {
-        name: 'Đề 17: The Renaissance (continued)',
+        name: 'Test 17: The Renaissance (continued)',
         headings: [
           'A. The Impact on Art',
           'B. The Impact on Science',
@@ -654,7 +654,7 @@
         keys: ['A','B','C','D','E','F','G']
       },
       {
-        name: 'Đề 18: CURRENCY',
+        name: 'Test 18: CURRENCY',
         headings: [
           '1. An unsatisfactory',
           '2. A soft currency is',
@@ -668,7 +668,7 @@
         keys: []
       },
       {
-        name: 'Đề 19: CAVING',
+        name: 'Test 19: CAVING',
         headings: [
           '1. The growth of caving',
           '2. The wide',
@@ -733,7 +733,7 @@
           inp.classList.add('correct');
         } else {
           inp.classList.add('wrong');
-          key.textContent = 'Đáp án đúng: ' + topic.keys[i];
+          key.textContent = 'Correct answer: ' + topic.keys[i];
         }
       }
     }
